@@ -140,19 +140,19 @@ class HIVTemplateOne extends AInfographic
             fontFamily: canada600,
             fontSize: '23px',
             textColor: textTwoDiv.style.color,
-            lineHeight: '1.0',
+            lineHeight: '1.2',
         });
         this._textHandler.SetCSSInfo(this._textHandler.GetCurrID(),{ 
             fontFamily: canada200,
             fontSize: '32px',
             textColor: textTwoDiv.style.color,
-            lineHeight: '1.0',
+            lineHeight: '1.2',
         });
         this._textHandler.SetCSSInfo(this._textHandler.GetCurrID(),{ 
             fontFamily: canada600,
             fontSize: '23px',
             textColor: textTwoDiv.style.color,
-            lineHeight: '1.0',
+            lineHeight: '1.2',
         });
         
         var barChartGroup = new Konva.Group({

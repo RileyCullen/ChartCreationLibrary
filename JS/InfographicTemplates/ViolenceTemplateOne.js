@@ -369,12 +369,12 @@ class ViolenceTemplateOne extends AInfographic
 
         var toolTipDiv = document.createElement('div');
         toolTipDiv.style.color = 'white';
-        var toolTipText = '<p style="margin:0px;"><span style="font-family: Roboto, sans-serif; font-size: 17px; font-weight: 300; line-height: 1.75;">81% of Virginia Residents</span></p>'
-            + '<p style="margin: 0px;"><span style="font-family: Roboto, sans-serif; font-size: 17px; font-weight: 300; line-height: 1.75;">think that LGBT people</span></p>'
-            + '<p style="margin: 0px;"><span style="font-family: Roboto, sans-serif; font-size: 17px; font-weight: 300; line-height: 1.75;">experience discrimination</span></p>'
-            + '<p style="margin: 0px;"><span style="font-family: Roboto, sans-serif; font-size: 17px; font-weight: 300; line-height: 1.75;">in the state.</span></p>';
+        var toolTipText = '<p style="margin:0px;"><span style="font-family: Roboto, sans-serif; font-size: 17px; font-weight: 300; line-height: 2.0;">81% of Virginia Residents</span></p>'
+            + '<p style="margin: 0px;"><span style="font-family: Roboto, sans-serif; font-size: 17px; font-weight: 300; line-height: 2.0;">think that LGBT people</span></p>'
+            + '<p style="margin: 0px;"><span style="font-family: Roboto, sans-serif; font-size: 17px; font-weight: 300; line-height: 2.0;">experience discrimination</span></p>'
+            + '<p style="margin: 0px;"><span style="font-family: Roboto, sans-serif; font-size: 17px; font-weight: 300; line-height: 2.0;">in the state.</span></p>';
         toolTipDiv.innerHTML = toolTipText;
-        this._textHandler.AddTextElem(toolTipDiv, sectionOne, 315, 365);
+        this._textHandler.AddTextElem(toolTipDiv, sectionOne, 315, 357);
         this._textHandler.SetCSSInfo(this._textHandler.GetCurrID(),{ 
             fontFamily: roboto300,
             fontSize: '17px',
