@@ -332,6 +332,8 @@ class QuillEditor
     {
         var qlEditor = document.querySelector('.ql-editor').cloneNode(true);
 
+        qlEditor.style.padding = 0 + 'px';
+
         var helper = document.createElement('div');
         helper.style.visibility = 'false';
         helper.style.position = 'absolute';
