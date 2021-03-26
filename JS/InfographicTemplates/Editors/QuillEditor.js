@@ -27,14 +27,13 @@ class QuillEditor
     {
         this._textElem = textElem;
         this._textImage = textElem.image;
-        this._primaryColor = textElem.textInfo.color;
-        this._font = textElem.textInfo.initialFont;
-        this._size = textElem.textInfo.initialSize;
         this._main = main;
         this._timeout = null;
         this._tr = tr;
 
-        console.log(this._primaryColor);
+        this._quill = 0;
+
+        this._font = 0;
     }
 
     /**
@@ -73,7 +72,7 @@ class QuillEditor
         this._RegisterFontSizes(sizeList);
         this._InitLineHeights(lineHeightList);
 
-        var quill = new Quill('#editor-container', {
+        this._quill = new Quill('#editor-container', {
             modules: {
                 toolbar: [
                   [{'font': fontList}],
@@ -91,14 +90,12 @@ class QuillEditor
                     "#3d1466", 'custom-color']}]
                 ],
               },
-              //placeholder: 'Compose an epic...',
+              placeholder: 'Compose an epic...',
               theme: 'snow',
         });
 
-        console.log(quill)
-
-        this._AddQuillListeners(quill, sizeList);
-        this._InitEditor(quill, sizeList);
+        this._InitEditor(sizeList);
+        this._AddQuillListeners(sizeList);
     }
 
     _InitLineHeights(lineHeightList)
@@ -127,7 +124,7 @@ class QuillEditor
      * @param {QuillEditor} quill The quill editor.
      * @param {Array} sizeList The array of default font sizes.
      */
-    _InitEditor(quill, sizeList)
+    _InitEditor(sizeList)
     {
         // Checking if the text's font size is registered or not. If not, we 
         // register it then format the editor.
@@ -136,10 +133,14 @@ class QuillEditor
             this._RegisterFontSizes(sizeList);
         }
     
-        var quillContentList = [];
-        var contentListSize = 0, elemCount = 0
+        var elemCount = 0
         var cssList = this._textElem.spanCSS;
+        var Delta = Quill.import('delta');
+        var contents = new Delta();
 
+        /**
+         * Registers font sizes if they are not already registered.
+         */
         cssList.forEach(d => {
             if (!sizeList.find(elem => elem == d.fontSize)) {
                 sizeList.push(d.fontSize);
@@ -147,32 +148,55 @@ class QuillEditor
             }
         });
 
-        console.log(cssList)
-        console.log(cssList[elemCount].fontSize)
-
+        /**
+         * Creates a Delta that will be used to create the Quill contents using 
+         * the spanCSS data found in the textHandler.
+         */
         this._textElem.textElem.childNodes.forEach((d, i) => {
             d.childNodes.forEach((elem) => {
-                console.log(elem);
-                quillContentList[contentListSize] = {
-                    insert: elem.innerHTML, 
-                    attributes: {
-                        color: cssList[elemCount].textColor, 
-                        size: cssList[elemCount].fontSize,
-                        font: cssList[elemCount].fontFamily,
-                        lineheight: cssList[elemCount].lineHeight
-                    } 
-                };
+                console.log(i + ': ' + elem.innerHTML);
+                contents.insert(elem.innerHTML, {
+                    font: cssList[elemCount].fontFamily,
+                    color: cssList[elemCount].textColor, 
+                    size: cssList[elemCount].fontSize,
+                    lineheight: cssList[elemCount].lineHeight,
+                });
                 elemCount++;
-                contentListSize++;
             });
-            quillContentList[contentListSize++] = {
-                insert: "\n",
-            }
-            quill.format('size', '10px');
+            contents.insert('\n');
         });
 
-        console.log(quillContentList)
-        quill.setContents(quillContentList);
+        // Sets content to the contents delta.
+        this._quill.setContents(contents);
+        this._DetermineInitialFont(contents);
+
+        /**
+         * "Fixes" the quill editor contents. For some reason (and I am not 
+         * entirely sure why), the quill editor will simplify the delta and remove 
+         * important attribute data (like the font). 
+         * 
+         * We fix this issue by simply reformatting the undefined fonts to the
+         * value of this._font.
+         */
+        this._UpdateQuillFont();
+    }
+
+    /**
+     * @summary     Determines the initial value of this._font.
+     * @description Determines the initial value of this._font greedily by finding
+     *              the first possible instance.
+     * 
+     * @param {Delta} contents The contents delta created using spanCSS from the
+     *                         textHandler.
+     */
+    _DetermineInitialFont(contents)
+    {
+        this._quill.getContents().ops.forEach((d, i) => {
+            if (d.attributes !== undefined && (d.attributes.font === undefined 
+                || d.attributes.font === null)) {
+                this._font = contents.ops[i].attributes.font;
+            }
+        });
     }
 
     /**
@@ -185,7 +209,7 @@ class QuillEditor
      */
     _RegisterFontFamilies(fontList)
     {
-        let Font = Quill.import('formats/font');
+        var Font = Quill.import('formats/font');
         Font.whitelist = fontList;
         Quill.register(Font, true);
     }
@@ -211,40 +235,27 @@ class QuillEditor
      * 
      * @param {Quill} quill The quill object we want to add event listeners to.
      */
-    _AddQuillListeners(quill, sizelist)
+    _AddQuillListeners(sizelist)
     {
-        this._AddFontColorListener(quill);
-        this._AddTextListener(quill);
-        this._AddFontSizeListener(quill, sizelist);
-        this._AddFontListener(quill);
+        this._AddTextListener();
+        this._AddFontColorListener();
+        this._AddFontSizeListener(sizelist);
     }
 
     /**
      * @summary     Allows for the input of custom font colors.
      * @description Adds an event listener that allows for the addition of custom 
      *              font colors.
-     * 
-     * @param {Quill} quill The quill edtior we want to add the event listener
-     *                      to.
      */
-    _AddFontColorListener(quill)
+    _AddFontColorListener()
     {
-        quill.getModule('toolbar').addHandler('color', (value) => {
+        this._quill.getModule('toolbar').addHandler('color', (value) => {
             if (value == 'custom-color') {
                 value = prompt('Enter Hex/RGB/RGBA');
             }
-            quill.format('color', value);
-            this._textElem.textInfo.color = quill.root.firstChild.firstChild.style.color;
-            /**
-             * Note: we need the code above instead of this._textElem.textInfo.color
-             * = value because we only want to update the color if the first line 
-             * changes. 
-             * 
-             * Since the root is the container for all of the text, we want to access
-             * its first child, and then since the paragraph nodes hold span nodes 
-             * which are what contain the actual text and styling, we want to get 
-             * root's first child's first child. 
-             */
+            this._font = this._quill.getFormat(this._quill.getSelection()).font;
+            this._quill.format('color', value);
+            this._quill.format('font', this._font)
         });
     }
 
@@ -252,44 +263,19 @@ class QuillEditor
      * @summary     Allows for the input of custom font sizes.
      * @description Adds an event listener that allows for the addition of a custom
      *              font size.
-     * 
-     * @param {Quill} quill The quill editor we want to add the event listener to.
      */
-    _AddFontSizeListener(quill, sizeList)
+    _AddFontSizeListener(sizeList)
     {
-        quill.getModule('toolbar').addHandler('size', (value) => {
+        this._quill.getModule('toolbar').addHandler('size', (value) => {
             if (value == 'custom-size') {
                 value = prompt('Enter font size');
                 value += 'px';
                 sizeList.push(value);
             }
             this._RegisterFontSizes(sizeList);
-            quill.format('size', value);
-            this._textElem.textInfo.initialSize = quill.root.firstChild.firstChild.style.fontSize;
-        });
-    }
-
-    _UpdateDataLabel()
-    {
-        var element = document.querySelector('.ql-size > .ql-picker-label');
-        console.log(element);
-    }
-
-
-    /**
-     * @summary     Overrides default handler for changing quill fonts.
-     * @description Manually overwrites default handler to provide the ability to
-     *              update the textInfo element located in _textElem. Besides this,
-     *              the behavior between this and the default handler is essentially
-     *              the same.
-     * 
-     * @param {Quill} quill The quill editor we want to add the event listener to.
-     */
-    _AddFontListener(quill)
-    {
-        quill.getModule('toolbar').addHandler('font', value => {
-            quill.format('font', value);
-            this._textElem.textInfo.initialFont = value;
+            this._font = this._quill.getFormat(this._quill.getSelection()).font;
+            this._quill.format('size', value);
+            this._quill.format('font', this._font);
         });
     }
 
@@ -298,13 +284,70 @@ class QuillEditor
      *              to the parameterized quill object.
      * @description Call's the quill object's on method with option 'text-change'
      *              and adds an event listener to it.
-     * 
-     * @param {Quill} quill The quill editor we want to add the event listener
-     *                      to.
      */
-    _AddTextListener(quill)
+    _AddTextListener()
     {
-        quill.on('text-change', () => { this._UpdateTextListener(); });
+        this._quill.on('text-change', (delta, oldDelta, source) => { 
+            this._UpdateQuillFont();
+            this._UpdateTextListener(); 
+        });
+    }
+
+    /**
+     * @summary     Updates null or undefined elements with current value of their 
+     *              repsective instance variables.
+     * 
+     * @description Updates null or undefined attributes in the Delta object associated
+     *              with the quill editor's contents. In some cases, these variables
+     *              can go undefined when they should have explicit values. This 
+     *              function re-adds those values so they are explicitly given.
+     */
+    _UpdateQuillFont()
+    {
+        this._quill.getContents().ops.forEach((d, i) => {
+            if (d.attributes !== undefined && (d.attributes.font === undefined 
+                || d.attributes.font === null)) {
+                var bounds = this._FindSelectionBounds(i);
+                this._ReformatQuillFont(bounds.lowerBound, bounds.upperBound);
+            }
+        });
+    }
+
+    /**
+     * @summary     This function finds the selection bounds of the null or 
+     *              undefined delta element so that it can be formated properly.W
+     * @description This function assumes that opsIndex is in the quill content's 
+     *              delta.
+     * 
+     * @param {int} opsIndex Index of the ops we want to convert to quill selection
+     *                       bounds.
+     */
+    _FindSelectionBounds(opsIndex)
+    {   
+        var count = 0, lowerBound = 0, upperBound = 0;
+        this._quill.getContents().ops.forEach((d, i) => {
+            var prevCount = count;
+            count += d.insert.length;
+            if (i === opsIndex) {
+                lowerBound = prevCount;
+                upperBound = count;
+            }
+        });
+        return { lowerBound, upperBound };
+    }
+
+    /**
+     * @summary     Reformats the font in the quill editor at index lower with 
+     *              length of (upper - lower).
+     * 
+     * @param {int} lower The starting index of the text we need to reformat.
+     * @param {int} upper The ending index of the text we need to reformat.
+     */
+    _ReformatQuillFont(lower, upper) 
+    {
+        this._quill.formatText(lower, upper - lower, {
+            font: this._font,
+        });
     }
 
     /**
@@ -325,22 +368,57 @@ class QuillEditor
      * @summary     Converts DOM elements on the page to Konva.Image elements
      * @description Uses the html2canvas module to convert DOM elements located 
      *              within the body into Konva.Image elements.
-     * 
-     * @param {int} index The index of the text element we want to convert.
      */
     _HTMLToCanvas()
     {
-        var qlEditor = document.querySelector('.ql-editor').cloneNode(true);
 
+        /** 
+         * Error check to ensure that Konva.js doesn't try to write an empty 
+         * image to the canvas. If this occurs, the program will break so we 
+         * need this error check here.
+         */
+        if (this._quill.getContents().ops[0].insert == '\n')
+        {   
+            this._quill.setContents([
+                { insert: 'Placeholder text', attributes: {font: '900-museo'} }
+            ])
+        }
+
+        // Gets the text in the quill editor 
+        var qlEditor = document.querySelector('.ql-editor').cloneNode(true);
         qlEditor.style.padding = 0 + 'px';
 
+        // Creates a helper <div> to render text. This is necessary because with
+        // out it, text would not render properly. 
         var helper = document.createElement('div');
         helper.style.visibility = 'false';
         helper.style.position = 'absolute';
         helper.id = 'ql-helper';
         helper.appendChild(qlEditor);
         document.getElementById('body').appendChild(helper);
+    
+        // Update textElem in textHandler element
+        this._textElem.textElem = qlEditor;
+        
+        var attributeCount = 0;
+        var cssList = [];
 
+        this._quill.getContents().ops.forEach((d, i) => {
+            if (d.attributes) {
+                var elem = {
+                    fontFamily: (d.attributes) ? d.attributes.font : '900-museo',
+                    fontSize: (d.attributes) ? d.attributes.size : '10px',
+                    textColor: (d.attributes) ? d.attributes.color : 'black',
+                    lineHeight: (d.attributes) ? d.attributes.lineheight : '1.0',
+                };
+                cssList[attributeCount] = elem;
+                attributeCount++;
+            }
+        });
+        this._textElem.spanCSS = cssList;
+
+        // Calling html2canvas and converting the quill editor contents into
+        // a Konva.Image.
         html2canvas(helper, {
             backgroundColor: null,
             scrollY: -(window.scrollY),
