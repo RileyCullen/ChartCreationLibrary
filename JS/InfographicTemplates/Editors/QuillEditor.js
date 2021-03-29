@@ -125,18 +125,8 @@ class QuillEditor
      * @param {Array} sizeList The array of default font sizes.
      */
     _InitEditor(sizeList)
-    {
-        // Checking if the text's font size is registered or not. If not, we 
-        // register it then format the editor.
-        if (!sizeList.find(elem => elem == this._size)) {
-            sizeList.push(this._size);
-            this._RegisterFontSizes(sizeList);
-        }
-    
-        var elemCount = 0
+    {    
         var cssList = this._textElem.spanCSS;
-        var Delta = Quill.import('delta');
-        var contents = new Delta();
 
         /**
          * Registers font sizes if they are not already registered.
@@ -148,23 +138,7 @@ class QuillEditor
             }
         });
 
-        /**
-         * Creates a Delta that will be used to create the Quill contents using 
-         * the spanCSS data found in the textHandler.
-         */
-        this._textElem.textElem.childNodes.forEach((d, i) => {
-            d.childNodes.forEach((elem) => {
-                console.log(i + ': ' + elem.innerHTML);
-                contents.insert(elem.innerHTML, {
-                    font: cssList[elemCount].fontFamily,
-                    color: cssList[elemCount].textColor, 
-                    size: cssList[elemCount].fontSize,
-                    lineheight: cssList[elemCount].lineHeight,
-                });
-                elemCount++;
-            });
-            contents.insert('\n');
-        });
+        var contents = this._SpanCSSToDelta();
 
         // Sets content to the contents delta.
         this._quill.setContents(contents);
@@ -179,6 +153,38 @@ class QuillEditor
          * value of this._font.
          */
         this._UpdateQuillFont();
+    }
+
+    /**
+     * @summary     Converts spanCSS data in a text handler element to a Quill
+     *              Delta.
+     * @description Iterates through all of the elements in spanCSS (which itself 
+     *              is a JSON Array) and converts it to a Delta that will be used
+     *              to populate the contents of the Quill text editor.
+     * @returns     The Delta version of spanCSS.
+     */
+    _SpanCSSToDelta()
+    {
+        var elemCount = 0
+        var cssList = this._textElem.spanCSS;
+        var Delta = Quill.import('delta');
+        var contents = new Delta();
+
+        this._textElem.textElem.childNodes.forEach((d, i) => {
+            d.childNodes.forEach((elem) => {
+                console.log(i + ': ' + elem.innerHTML);
+                contents.insert(elem.innerHTML, {
+                    font: cssList[elemCount].fontFamily,
+                    color: cssList[elemCount].textColor, 
+                    size: cssList[elemCount].fontSize,
+                    lineheight: cssList[elemCount].lineHeight,
+                });
+                elemCount++;
+            });
+            contents.insert('\n');
+        });
+        
+        return contents;
     }
 
     /**
@@ -238,8 +244,25 @@ class QuillEditor
     _AddQuillListeners(sizelist)
     {
         this._AddTextListener();
+        this._AddFontListener();
         this._AddFontColorListener();
         this._AddFontSizeListener(sizelist);
+    }
+
+    /**
+     * @summary     Custom event listener that is triggered when the font option
+     *              on Quill toolbar is selected.
+     * @description Custom event listener that essentially performs the same 
+     *              action as the default event listener for fonts with the 
+     *              exception that it updated this._font for usage later in the
+     *              program.
+     */
+    _AddFontListener()
+    {
+        this._quill.getModule('toolbar').addHandler('font', (value) => {
+            this._font = this._quill.getFormat(this._quill.getSelection()).font;
+            this._quill.format('font', value);
+        });
     }
 
     /**
@@ -287,7 +310,7 @@ class QuillEditor
      */
     _AddTextListener()
     {
-        this._quill.on('text-change', (delta, oldDelta, source) => { 
+        this._quill.on('text-change', () => { 
             this._UpdateQuillFont();
             this._UpdateTextListener(); 
         });
@@ -399,23 +422,7 @@ class QuillEditor
     
         // Update textElem in textHandler element
         this._textElem.textElem = qlEditor;
-        
-        var attributeCount = 0;
-        var cssList = [];
-
-        this._quill.getContents().ops.forEach((d, i) => {
-            if (d.attributes) {
-                var elem = {
-                    fontFamily: (d.attributes) ? d.attributes.font : '900-museo',
-                    fontSize: (d.attributes) ? d.attributes.size : '10px',
-                    textColor: (d.attributes) ? d.attributes.color : 'black',
-                    lineHeight: (d.attributes) ? d.attributes.lineheight : '1.0',
-                };
-                cssList[attributeCount] = elem;
-                attributeCount++;
-            }
-        });
-        this._textElem.spanCSS = cssList;
+        this._DeltaToSpanCSS();
 
         // Calling html2canvas and converting the quill editor contents into
         // a Konva.Image.
@@ -429,4 +436,30 @@ class QuillEditor
         });
         helper.remove();
     }
+
+    /**
+     * @summary     Converts the Quill Delta into a spanCSS element.
+     * @description Iterates through the contents of the Quill editor, which is
+     *              in the form of a delta, and converts each element into an 
+     *              object of spanCSS.
+     */
+     _DeltaToSpanCSS()
+     {
+         var attributeCount = 0;
+         var cssList = [];
+ 
+         this._quill.getContents().ops.forEach((d, i) => {
+             if (d.attributes) {
+                 var elem = {
+                     fontFamily: (d.attributes) ? d.attributes.font : '900-museo',
+                     fontSize: (d.attributes) ? d.attributes.size : '10px',
+                     textColor: (d.attributes) ? d.attributes.color : 'black',
+                     lineHeight: (d.attributes) ? d.attributes.lineheight : '1.0',
+                 };
+                 cssList[attributeCount] = elem;
+                 attributeCount++;
+             }
+         });
+         this._textElem.spanCSS = cssList; 
+     }
 }
