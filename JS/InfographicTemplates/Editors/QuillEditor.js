@@ -34,6 +34,9 @@ class QuillEditor
         this._quill = 0;
 
         this._font = 0;
+        this._fontArr = [];
+        this._fontSize = -1;
+        this._fontIndex = 0;
     }
 
     /**
@@ -152,7 +155,7 @@ class QuillEditor
          * We fix this issue by simply reformatting the undefined fonts to the
          * value of this._font.
          */
-        this._UpdateQuillFont();
+        this._UpdateQuillFont(true);
     }
 
     /**
@@ -172,7 +175,6 @@ class QuillEditor
 
         this._textElem.textElem.childNodes.forEach((d, i) => {
             d.childNodes.forEach((elem) => {
-                console.log(i + ': ' + elem.innerHTML);
                 contents.insert(elem.innerHTML, {
                     font: cssList[elemCount].fontFamily,
                     color: cssList[elemCount].textColor, 
@@ -201,6 +203,7 @@ class QuillEditor
             if (d.attributes !== undefined && (d.attributes.font === undefined 
                 || d.attributes.font === null)) {
                 this._font = contents.ops[i].attributes.font;
+                this._fontArr[++this._fontSize] = contents.ops[i].attributes.font;
             }
         });
     }
@@ -324,14 +327,18 @@ class QuillEditor
      *              with the quill editor's contents. In some cases, these variables
      *              can go undefined when they should have explicit values. This 
      *              function re-adds those values so they are explicitly given.
+     * 
+     * @param {bool} useFontArray A boolean that determines if this function
+     *                            should use the fontArr instance variable or 
+     *                            the font instance variable.
      */
-    _UpdateQuillFont()
+    _UpdateQuillFont(useFontArray = false)
     {
         this._quill.getContents().ops.forEach((d, i) => {
             if (d.attributes !== undefined && (d.attributes.font === undefined 
                 || d.attributes.font === null)) {
                 var bounds = this._FindSelectionBounds(i);
-                this._ReformatQuillFont(bounds.lowerBound, bounds.upperBound);
+                this._ReformatQuillFont(bounds.lowerBound, bounds.upperBound, useFontArray);
             }
         });
     }
@@ -363,13 +370,19 @@ class QuillEditor
      * @summary     Reformats the font in the quill editor at index lower with 
      *              length of (upper - lower).
      * 
-     * @param {int} lower The starting index of the text we need to reformat.
-     * @param {int} upper The ending index of the text we need to reformat.
+     * @param {int}     lower        The starting index of the text we need to reformat.
+     * @param {int}     upper        The ending index of the text we need to reformat.
+     * @param {boolean} useFontArray Determines whether quill reformats based on 
+     *                               _font or _fontArr 
      */
-    _ReformatQuillFont(lower, upper) 
+    _ReformatQuillFont(lower, upper, useFontArray) 
     {
+        var font = 0;
+        if (useFontArray) font = this._fontArr[this._fontIndex++];
+        else font = this._font;
+        
         this._quill.formatText(lower, upper - lower, {
-            font: this._font,
+            font: font,
         });
     }
 
