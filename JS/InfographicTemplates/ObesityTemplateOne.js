@@ -43,6 +43,7 @@ class ObesityTemplateOne extends AInfographic
             fontSize: '20px',
             textColor: ribbonTextDiv.style.color,
             lineHeight: '1.0',
+            align: 'center'
         });
 
         // Creating title text
@@ -62,6 +63,7 @@ class ObesityTemplateOne extends AInfographic
             fontSize: '75px',
             textColor: 'black',
             lineHeight: '1.0',
+            align: 'center'
         });
         this._textHandler.SetCSSInfo(this._textHandler.GetCurrID(),{ 
             fontFamily: roboto400,
@@ -92,6 +94,7 @@ class ObesityTemplateOne extends AInfographic
             fontSize: '15px',
             textColor: 'black',
             lineHeight: '1.0',
+            align: 'center'
         });
 
         // CONTENT
@@ -372,6 +375,7 @@ class ObesityTemplateOne extends AInfographic
             fontSize: '10px',
             textColor: sourceTextDiv.style.color,
             lineHeight: '1.0',
+            align: 'center'
         });
 
         this._FinalizeInfog();

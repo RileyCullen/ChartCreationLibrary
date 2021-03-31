@@ -53,6 +53,7 @@ class HIVTemplateOne extends AInfographic
             fontSize: '20px',
             textColor: '#3c4c59',
             lineHeight: '1.2',
+            align: 'center',
         });
 
         var questionDiv = document.createElement('div');
@@ -64,6 +65,7 @@ class HIVTemplateOne extends AInfographic
             fontSize: '36px',
             textColor: '#3c4c59',
             lineHeight: '1.2',
+            align: 'center',
         });
         
         const MAN = '\uf183', WOMAN = '\uf182', LIGHT_ORANGE = '#f9ab7d', ORANGE = '#ee5d26',
@@ -116,6 +118,7 @@ class HIVTemplateOne extends AInfographic
         sectionOne.add(waffleOneGroup);
         
         var ICON_FONT = '"Font Awesome 5 Free"';
+        console.log("Default offset: " + DEFAULT_OFFSET);
         var manPreset = GenerateWafflePreset(MAN, LIGHT_ORANGE, DEFAULT_OFFSET, ICON_FONT),
             orangeWomanPreset = GenerateWafflePreset(WOMAN, ORANGE, DEFAULT_OFFSET - 1, ICON_FONT);
 
@@ -278,6 +281,7 @@ class HIVTemplateOne extends AInfographic
             fontSize: '16px',
             textColor: 'black',
             lineHeight: '1.0',
+            align: 'center'
         });
 
         var moreInfoTextDiv = document.createElement('div');
@@ -291,6 +295,7 @@ class HIVTemplateOne extends AInfographic
             fontSize: '14px',
             textColor: 'black',
             lineHeight: '1.0',
+            align: 'center'
         });
 
         var logoHelper = new Image();
@@ -309,6 +314,8 @@ class HIVTemplateOne extends AInfographic
         
         footer.moveToTop();
         this._FinalizeInfog();
+
+        console.log(this._chartHandler);
     }
 
     Draw()
