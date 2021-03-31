@@ -43,11 +43,6 @@ class TextHandler
                 name: 'Selectable EditableText',
                 id: this._curr
             }),
-            'textInfo': {
-                'color': 'black',
-                'initialSize': '10px',
-                'initialFont': '900-museo',
-            },
             'spanCSS': []
         };
         textElem.id = this._curr;
@@ -75,13 +70,14 @@ class TextHandler
      * @param {JSON} param1 A JSON object that holds the necessary CSS attributes.
      */
     SetCSSInfo(id, {fontFamily = '900-museo', fontSize = '10px', 
-        textColor = 'black', lineHeight = '1.0'})
+        textColor = 'black', lineHeight = '1.0', align='left'})
     {
         this._handler[id].spanCSS.push({
             fontFamily: fontFamily,
             fontSize: fontSize,
             textColor: textColor,
-            lineHeight: lineHeight
+            lineHeight: lineHeight,
+            align: align,
         });
     }
 
