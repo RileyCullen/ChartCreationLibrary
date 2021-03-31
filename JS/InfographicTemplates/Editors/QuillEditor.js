@@ -400,11 +400,9 @@ class QuillEditor
          * image to the canvas. If this occurs, the program will break so we 
          * need this error check here.
          */
-        if (this._quill.getContents().ops[0].insert == '\n')
-        {   
-            this._quill.setContents([
-                { insert: 'Placeholder text', attributes: {font: '900-museo'} }
-            ])
+        if (this._IsEditorEmpty()) {
+            this._quill.format('font', '900-museo');
+            return;
         }
 
         // Gets the text in the quill editor 
@@ -443,23 +441,32 @@ class QuillEditor
      *              in the form of a delta, and converts each element into an 
      *              object of spanCSS.
      */
-     _DeltaToSpanCSS()
-     {
-         var attributeCount = 0;
-         var cssList = [];
- 
-         this._quill.getContents().ops.forEach((d, i) => {
-             if (d.attributes) {
-                 var elem = {
-                     fontFamily: (d.attributes) ? d.attributes.font : '900-museo',
-                     fontSize: (d.attributes) ? d.attributes.size : '10px',
-                     textColor: (d.attributes) ? d.attributes.color : 'black',
-                     lineHeight: (d.attributes) ? d.attributes.lineheight : '1.0',
-                 };
-                 cssList[attributeCount] = elem;
-                 attributeCount++;
-             }
-         });
-         this._textElem.spanCSS = cssList; 
-     }
+    _DeltaToSpanCSS()
+    {
+        var attributeCount = 0;
+        var cssList = [];
+
+        this._quill.getContents().ops.forEach((d, i) => {
+            if (d.attributes) {
+                var elem = {
+                    fontFamily: (d.attributes) ? d.attributes.font : '900-museo',
+                    fontSize: (d.attributes) ? d.attributes.size : '10px',
+                    textColor: (d.attributes) ? d.attributes.color : 'black',
+                    lineHeight: (d.attributes) ? d.attributes.lineheight : '1.0',
+                };
+                cssList[attributeCount] = elem;
+                attributeCount++;
+            }
+        });
+        this._textElem.spanCSS = cssList; 
+    }
+
+    /**
+     * @summary Determines if quill editor is empty.
+     * @returns True if empty and false if not empty.
+     */
+    _IsEditorEmpty()
+    {
+        return (this._quill.getContents().ops[0].insert == '\n')
+    }
 }
