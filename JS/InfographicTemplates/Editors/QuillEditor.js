@@ -141,9 +141,10 @@ class QuillEditor
         });
 
         var contents = this._SpanCSSToDelta();
-
+        
         // Sets content to the contents delta.
         this._quill.setContents(contents);
+        this._quill.format('align', (cssList.length != 0) ? cssList[0].align : 'left')
         this._DetermineInitialFont(contents);
 
         /**
@@ -184,7 +185,6 @@ class QuillEditor
             });
             contents.insert('\n');
         });
-        
         return contents;
     }
 
@@ -465,6 +465,7 @@ class QuillEditor
                     fontSize: (d.attributes) ? d.attributes.size : '10px',
                     textColor: (d.attributes) ? d.attributes.color : 'black',
                     lineHeight: (d.attributes) ? d.attributes.lineheight : '1.0',
+                    align: (d.attributes) ? d.attributes.align : 'left'
                 };
                 cssList[attributeCount] = elem;
                 attributeCount++;
