@@ -205,9 +205,6 @@ class WaffleEditor
         var presetAValue = document.getElementById('PresetAInput').value,
             presetBValue = document.getElementById('PresetBInput').value;
 
-        console.log(presetAValue);
-        console.log(presetBValue);
-
         if (presetAValue == null || presetAValue == '' || presetBValue == null || presetBValue == '') return;
         if (isNaN(presetAValue) || isNaN(presetBValue)) return;
 
