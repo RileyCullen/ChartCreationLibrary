@@ -144,7 +144,6 @@ class QuillEditor
         
         // Sets content to the contents delta.
         this._quill.setContents(contents);
-        this._quill.format('align', (cssList.length != 0) ? cssList[0].align : 'left')
         this._DetermineInitialFont(contents);
 
         /**
@@ -156,6 +155,9 @@ class QuillEditor
          * value of this._font.
          */
         this._UpdateQuillFont(true);
+
+        var alignment = (cssList.length != 0) ? cssList[0].align : 'left';
+        this._AlignText(alignment);
     }
 
     /**
@@ -207,6 +209,23 @@ class QuillEditor
                 }
             }
         });
+    }
+
+    /**
+     * @summary     Aligns all of the lines in the quill editor.
+     * 
+     * @param {string} align The type of alignment for each line.
+     */
+    _AlignText(align)
+    {
+        var contents = this._quill.getContents();
+        var contentLength = 0;
+
+        contents.ops.forEach((d) => {
+            contentLength += d.insert.length;
+        });
+
+        this._quill.formatLine(0, contentLength, 'align', align)
     }
 
     /**
@@ -459,15 +478,14 @@ class QuillEditor
     {
         var attributeCount = 0;
         var cssList = [];
-
         this._quill.getContents().ops.forEach((d, i) => {
-            if (d.attributes) {
+            if (d.attributes && d.insert !== '\n') {
                 var elem = {
                     fontFamily: (d.attributes) ? d.attributes.font : '900-museo',
                     fontSize: (d.attributes) ? d.attributes.size : '10px',
                     textColor: (d.attributes) ? d.attributes.color : 'black',
                     lineHeight: (d.attributes) ? d.attributes.lineheight : '1.0',
-                    align: (d.attributes) ? d.attributes.align : 'left'
+                    align: (d.attributes) ? this._quill.getFormat().align : 'left'
                 };
                 cssList[attributeCount] = elem;
                 attributeCount++;
