@@ -199,10 +199,12 @@ class QuillEditor
     _DetermineInitialFont(contents)
     {
         this._quill.getContents().ops.forEach((d, i) => {
-            if (d.attributes !== undefined && (d.attributes.font === undefined 
-                || d.attributes.font === null)) {
-                this._font = contents.ops[i].attributes.font;
-                this._fontArr[++this._fontSize] = contents.ops[i].attributes.font;
+            if (d.insert !== '\n'){
+                if (d.attributes !== undefined && (d.attributes.font === undefined 
+                    || d.attributes.font === null)) {
+                    this._font = contents.ops[i].attributes.font;
+                    this._fontArr[++this._fontSize] = contents.ops[i].attributes.font;
+                }
             }
         });
     }
