@@ -301,7 +301,6 @@ class QuillEditor
             }
             this._font = this._quill.getFormat(this._quill.getSelection()).font;
             this._quill.format('color', value);
-            this._quill.format('font', this._font)
         });
     }
 
@@ -321,7 +320,6 @@ class QuillEditor
             this._RegisterFontSizes(sizeList);
             this._font = this._quill.getFormat(this._quill.getSelection()).font;
             this._quill.format('size', value);
-            this._quill.format('font', this._font);
         });
     }
 
