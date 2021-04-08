@@ -47,7 +47,6 @@ class TextHandler
         };
         textElem.id = this._curr;
         textElem.className = 'EditableText';
-        textElem.style.textAlign = 'left';
         this._handler[this._curr].image.rotate(rotateby);
         group.add(this._handler[this._curr].image);
         group.setAttr('id', this._curr);
