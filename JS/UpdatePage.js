@@ -1,22 +1,25 @@
 var infogObj;
 function UpdatePage(infogNum)
 {
-    if (infogObj !== undefined) infogObj.Remove();
-    if (document.getElementById('Placeholder') != null) RemovePlaceholder();
+    document.fonts.ready.then(() => {
+        if (infogObj !== undefined) infogObj.Remove();
+        if (document.getElementById('Placeholder') != null) RemovePlaceholder();
 
-    switch(infogNum) {
-        case 0: 
-            infogObj = new HIVTemplateOne();
-            break;
-        case 1: 
-            infogObj = new ObesityTemplateOne();
-            break;
-        case 2: 
-            infogObj = new ViolenceTemplateOne();
-    }
-    infogObj.CreateInfographic();
-    infogObj.Draw();
-    CreatePlaceholder();
+        switch(infogNum) {
+            case 0: 
+                infogObj = new HIVTemplateOne();
+                break;
+            case 1: 
+                infogObj = new ObesityTemplateOne();
+                break;
+            case 2: 
+                infogObj = new ViolenceTemplateOne();
+                break;
+        }
+        infogObj.CreateInfographic();
+        infogObj.Draw();
+        CreatePlaceholder();
+    });
 }
 
 function CreatePlaceholder()
