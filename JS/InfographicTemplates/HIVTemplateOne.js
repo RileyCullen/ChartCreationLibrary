@@ -314,8 +314,6 @@ class HIVTemplateOne extends AInfographic
         
         footer.moveToTop();
         this._FinalizeInfog();
-
-        console.log(this._chartHandler);
     }
 
     Draw()
