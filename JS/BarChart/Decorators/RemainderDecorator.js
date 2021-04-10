@@ -15,8 +15,8 @@ class RemainderDecorator extends ABarChartDecorator
      * 
      * @requires ABarChart.js
      * 
-     * @param {BarChart} chart    : See ABarChartDecorator
-     * @param {string}   barColor : Color of 'remainder' bars
+     * @param {BarChart} chart    See ABarChartDecorator
+     * @param {string}   barColor Color of 'remainder' bars
      */
 
     constructor(chart, barColor = 'gray') 
@@ -40,7 +40,8 @@ class RemainderDecorator extends ABarChartDecorator
 
     /**
      * @summary     This function draws the remainder bars.
-     * @description See summary.
+     * @description This function iterates through all of the data elements 
+     *              in _data and uses that data to draw the remainder bars.
      */
     _DrawBars()
     {

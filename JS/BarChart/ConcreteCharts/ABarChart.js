@@ -21,13 +21,15 @@ class ABarChart
      *                                  'category': 'categoryName',
      *                                  'value': value,
      *                                  'color: color, 
-     *                               }
-     * @param {Konva.Group} group    The Konva.Group we will add the bar chart to
-     * @param {double}      width    The width of the bar chart
-     * @param {double}      height   The height of the bar chart
-     * @param {double}      padding  The space between the bars within a bar chart
+     *                               }.
+     * @param {Konva.Group} group    The Konva.Group object that holds the bar 
+     *                               chart in the cavnas.
+     * @param {double}      width    The width of the bar chart.
+     * @param {double}      height   The height of the bar chart.
+     * @param {double}      padding  The space between the bars within a bar chart.
      * @param {int}         rotateBy The amount we will rotate the bar chart by
-     *                                 (note that this value can only be 0 or 90)
+     *                               (note that this value can only be 0 or 90
+     *                               and goes in the clockwise direction).
     */
     constructor(data, group, width, height, padding, rotateBy)
     {
@@ -56,7 +58,10 @@ class ABarChart
     }
 
     /**
-     * @summary Returns the data bound to a particular BarChart type.
+     * @summary     Returns the data bound to a particular BarChart type.
+     * @description Returns the JSON array named _data to the caller. Note that 
+     *              this returns a reference to the actual data element and not 
+     *              a copy.
      */
     GetData()
     {
@@ -66,9 +71,21 @@ class ABarChart
     /**
      * @summary     Updates data array.
      * @description Updates data array as well as the yScale since a given BarChart's
-     *              yScale is determined by the data.
+     *              yScale is determined by the data. Note that the data array 
+     *              passed into this function should follow the form:
      * 
-     * @param {JSON Array} data The updated data we want to bind to our BarChart object.
+     *              data[i] = {
+     *                  'category': 'categoryName',
+     *                  'value': value,
+     *                  'color: color, 
+     *              }. 
+     * 
+     *              Also note that this function does not make any effort to 
+     *              verify that the data array passed in is valid and assumes by
+     *              contract that it is so.            
+     * 
+     * @param {JSON Array} data The new data array we want to bind to our 
+     *                          BarChart object.
      */
     UpdateData(data)
     {
@@ -77,6 +94,11 @@ class ABarChart
         this._SetUpYDomain();
     }
 
+    /**
+     * @summary     Removes the bar chart from the canvas. 
+     * @description A wrapper function that calls the Konva.js method destroy(),
+     *              which removes the group from the Konva.Stage.
+     */
     Remove()
     {
         this._group.destroy();
@@ -84,6 +106,9 @@ class ABarChart
 
     /**
      * @summary     Removes all child nodes in this group.
+     * @description A wrapper function that calls the Konva.js method 
+     *              destroyChildren() which removes all of the child elements 
+     *              located with _group.
      */
     _Clean()
     {
@@ -121,7 +146,9 @@ class ABarChart
     }
 
     /**
-     * @summary     Finds the max value 
+     * @summary     Finds the max value in the data array.
+     * @description Function that iterates through a set of values created from
+     *              _data. This function attempts to find the max value in _data.
      * 
      * @param {} arr 
      * @param {*} keys 

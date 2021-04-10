@@ -5,7 +5,8 @@
 class DataValueDecorator extends ABarChartDecorator 
 {
     /**
-     * @summary     This decorator adds a label to the bars.
+     * @summary     This decorator adds a label to the bars with the bar's value 
+     *              as the output.
      * @description This decorator adds a label to the bars. This label can either be
      *              a purely numeric variable, a percentage, a category, or a 
      *              combination of the previously mentioned labels.
@@ -14,17 +15,17 @@ class DataValueDecorator extends ABarChartDecorator
      * 
      * @see ABarChart.js
      * 
-     * @param {BarChart}   chart        : See ABarChartDecorator.js    
-     * @param {Boolean}    isPercentage : Determines if percentage sign will be displayed
-     * @param {Boolean}    isCategory   : Determines if category will be displayed
-     * @param {Boolean}    isMiddle     : Determines the location of data value labels.
-     *                                    When true, the data value labels will be located
-     *                                    in the middle of the bars. If false, the 
-     *                                    values will be located at the top of the bars.
-     * @param {JSON array} font         : Determines font of labels
+     * @param {BarChart}   chart        See ABarChartDecorator.js    
+     * @param {Boolean}    isPercentage Determines if percentage sign will be displayed
+     * @param {Boolean}    isCategory   Determines if category will be displayed
+     * @param {Boolean}    isMiddle     Determines the location of data value labels.
+     *                                  When true, the data value labels will be located
+     *                                  in the middle of the bars. If false, the 
+     *                                  values will be located at the top of the bars.
+     * @param {JSON array} font         Determines font of labels
      */
     constructor(chart, isPercentage = true, isCategory = false, isMiddle = true, 
-        font = {'fontSize': 8, 'fontFamily': 'Times New Roman, Times, serif', 'fontColor': 'black'}) 
+        font = {fontSize: 8, fontFamily: 'Times New Roman, Times, serif', fontColor: 'black'}) 
     {
         super(chart);
         this._font = font;
@@ -34,7 +35,7 @@ class DataValueDecorator extends ABarChartDecorator
     }
 
     /**
-     * @summary     This function adds a label to the bars within a bar chart/
+     * @summary     This function adds a label to the bars within a bar chart.
      * @description See summary. This is done by calling _chart's CreateBarChart
      *              function and by calling _AddLabels.
      */
@@ -47,7 +48,7 @@ class DataValueDecorator extends ABarChartDecorator
     /**
      * @summary     This function adds the labels to the already drawn bar chart.
      * @description This function iterates through all of the values in _data
-     *              and create a label for each of the bars based on the booleans
+     *              and creates a label for each of the bars based on the booleans
      *              passed through the constructor as well as the d.value for 
      *              that particular bar.
      */

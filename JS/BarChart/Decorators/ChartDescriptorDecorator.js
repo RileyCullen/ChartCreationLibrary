@@ -6,20 +6,27 @@ class ChartDescriptorDecorator extends ABarChartDecorator
 {
     /**
      * @summary     This decorator adds color descriptors to the chart.
-     * @description See summary. 
+     * @description Essentially, each bar chart has two elements. Categories 
+     *              describe entire bars while subcategories describe the individual
+     *              elements in a bar. In stacked bar charts, these two notions are 
+     *              different while in regular bar charts they are the same.
+     * 
+     *              With that being said, this decorator class creates a legend
+     *              with each subcategory and its associated color.
      * 
      * @requires ABarChartDecorator.js
      * @requires FontWidthDetector.js
      *  
-     * @param {BarChart}   chart    : Chart object we are adding to 
-     * @param {Boolean}    isTop    : Determines location of descriptor (top or bottom)
-     * @param {JSON Array} font     : Determines font 
-     * @param {int}        iconSize : Width/height of descriptor rectangles
+     * @param {BarChart}   chart    Chart object we are decorating.
+     * @param {Boolean}    isTop    Determines location of descriptor (top or bottom).
+     * @param {JSON Array} font     Determines font. See CategoryLabelDescriptor
+     *                              for more font information.
+     * @param {int}        iconSize Width/height of descriptor rectangles
      * 
      */
-    constructor(chart, isTop = true, font =  {'fontSize' : 8, 
-        'fontFamily' : 'Times New Roman, Times, serif', 
-        'textColor' : 'black'}, iconSize = 7, maxPerRow = 3) 
+    constructor(chart, isTop = true, font =  {fontSize : 8, 
+        fontFamily : 'Times New Roman, Times, serif', 
+        textColor : 'black'}, maxPerRow = 3) 
     {
         // TODO: vertical vs horizontal descriptor
         super(chart);
@@ -35,7 +42,7 @@ class ChartDescriptorDecorator extends ABarChartDecorator
     /**
      * @summary     This function adds descriptors to the chart.
      * @description See summary. This function does so by calling _chart's 
-     *              CreateBarChart function and _CreateDescriptor
+     *              CreateBarChart function and _CreateDescriptor.
      */
     CreateBarChart()
     {

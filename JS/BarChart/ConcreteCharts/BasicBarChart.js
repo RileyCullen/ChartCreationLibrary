@@ -32,9 +32,9 @@ class BasicBarChart extends ABarChart
 
     /**
      * @summary     Creates the bar chart.
-     * @description This function creates a custom DOM element, binds the data
-     *              to this custom svg element, the draws those elements to the 
-     *              canvas.
+     * @description This function creates a custom DOM container and uses D3
+     *              (_BindData) to create custom DOM elements inside the container
+     *              and canvas (_DrawBars) to render the bars on canvas.
      */
     _CreationHelper()
     {
@@ -46,7 +46,10 @@ class BasicBarChart extends ABarChart
     }
 
     /**
-     * @summary     Binds data to custom DOM elements in memory.
+     * @summary     Binds data to custom a DOM element in memory.
+     * @description Uses D3 to create custom DOM elements named custom.rect and
+     *              binds rendering data to it so that it can be correctly drawn
+     *              on the canvas.
      */
     _BindData(custom)
     {
@@ -73,6 +76,9 @@ class BasicBarChart extends ABarChart
 
     /**
      * @summary     Uses binded data to add Konva.js elements to group.
+     * @description Uses the data bound to the custom DOM elements in _BindData
+     *              to create a canvas representation of the D3 chart using 
+     *              Konva.js.
      */
     _DrawBars(custom, hidden)
     {

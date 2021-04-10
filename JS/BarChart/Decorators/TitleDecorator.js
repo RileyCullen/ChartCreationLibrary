@@ -5,6 +5,10 @@
 class TitleDecorator extends ABarChartDecorator
 {
     /**
+     * @depreciated Note that this decorator was depreciated due to the difficulty 
+     *              in determining where to place titled (i.e. it is not used
+     *              anywhere).
+     * 
      * @summary     Provides the bar chart type the ability to add a title.
      * @description A concrete class that adds a Konva.Text node to the bar chart's
      *              _group variable.

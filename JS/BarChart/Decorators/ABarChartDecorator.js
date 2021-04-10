@@ -15,10 +15,11 @@ class ABarChartDecorator extends ABarChart
      * 
      * @see ABarChart.js
      * 
-     * @param {BarChart} chart : This type is a concrete bar chart (or decorator)
+     * @param {BarChart} chart This type is a concrete bar chart (or decorator)
      *                           that we plan on decorating.
      */
-    constructor(chart) {
+    constructor(chart) 
+    {
         super(chart._data, chart._group, chart._chartWidth, chart._chartHeight, chart._padding, chart._rotateBy);
         this._chart = chart;
         this._yScale = chart._yScale;
@@ -29,7 +30,7 @@ class ABarChartDecorator extends ABarChart
     }
 
     /**
-     * @summary     Updates the decorator with a new chart value.
+     * @summary     Updates the decorator with a new data array.
      * @description Updates the data, chart, and yScale associated with this
      *              particular decorator.
      * 

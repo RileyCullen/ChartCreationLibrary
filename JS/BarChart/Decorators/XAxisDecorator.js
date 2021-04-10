@@ -15,15 +15,15 @@ class XAxisDecorator extends ABarChartDecorator
      * 
      * @see ABarChartDecorator.js
      * 
-     * @param {BarChart}   chart           : This type is a concrete bar chart (or decorator)
-     *                                       that we plan on decorating.
-     * @param {string}     lineColor       : The color of the axis and its tick marks
-     * @param {int}        lineStrokeWidth : width of the x-axis
-     * @param {int}        tickStrokeWidth : width of the x-axis ticks
-     * @param {JSON Array} font            : determines font size and font family
+     * @param {BarChart}   chart           This type is a concrete bar chart (or decorator)
+     *                                     that we plan on decorating.
+     * @param {string}     lineColor       The color of the axis and its tick marks
+     * @param {int}        lineStrokeWidth Width of the x-axis
+     * @param {int}        tickStrokeWidth Width of the x-axis ticks
+     * @param {JSON Array} font            Determines font size and font family
      */
     constructor(chart, lineColor = 'black', lineStrokeWidth = 1, tickStrokeWidth = 0.5,
-        font = {'fontSize' : 10, 'fontFamily' : 'Times New Roman, Times, serif', 'textColor' : 'black'})
+        font = {fontSize : 10, fontFamily : 'Times New Roman, Times, serif', textColor : 'black'})
     {
         super(chart);
         this._lineColor = lineColor;

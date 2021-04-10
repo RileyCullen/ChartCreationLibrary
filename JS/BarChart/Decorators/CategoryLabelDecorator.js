@@ -6,21 +6,33 @@ class CategoryLabelDecorator extends ABarChartDecorator
 {
     /**
      * @summary     Adds category labels to the parameterized bar chart.
-     * @description Draws unique category labels from the this._data array
-     *              to the canvas using Konva.js.
+     * @description Draws unique category labels based on the this._data array
+     *              to the canvas using Konva.js. 
+     * 
+     *              Notethat each bar chart has two elements. Categories 
+     *              describe entire bars while subcategories describe the individual
+     *              elements in a bar. In stacked bar charts, these two notions are 
+     *              different while in regular bar charts they are the same.
      * 
      * @requires ABarChartDecorator.js
      * @see ABarChartDecorator.js
      * 
-     * @param {Bar Chart}  chart        : The chart we want to decorate
-     * @param {Boolean}    isWithinBars : Determines if category label is within the bars
-     *                                    or if it is outside of the bars
-     * @param {Boolean}    isTop        : Determines if the label is located at the
-     *                                    top or bottom
-     * @param {JSON Array} font         : The font of the label.
+     * @param {Bar Chart}  chart        The chart we want to decorate
+     * @param {Boolean}    isWithinBars Determines if category label is within the bars
+     *                                  or if it is outside of the bars
+     * @param {Boolean}    isTop        Determines if the label is located at the
+     *                                  top or bottom
+     * @param {JSON Array} font         The font of the label. Note that font is
+     *                                  a JSON object with the following format:
+     *                  
+     *                                  {
+     *                                      'fontSize': (number),
+     *                                      'fontFamily': (string),
+     *                                      'textColor': (string),
+     *                                  }
      */
     constructor(chart, isWithinBars = true, isTop = true, font = 
-        {'fontSize' : 10, 'fontFamily' : 'Times New Roman, Times, serif', 'textColor' : 'black'})
+        {fontSize : 10, fontFamily : 'Times New Roman, Times, serif', textColor : 'black'})
     {
         super(chart);
         this._isWithinBars = isWithinBars;
@@ -31,8 +43,8 @@ class CategoryLabelDecorator extends ABarChartDecorator
 
     /**
      * @summary     Creates bar chart and adds category labels.
-     * @description Calls this._chart's CreateBarChart method and then creates
-     *              the labels by calling this._CreateLabels.
+     * @description Calls _chart's CreateBarChart method and then creates
+     *              the labels by calling _CreateLabels.
      */
     CreateBarChart()
     {

@@ -5,9 +5,15 @@
 class PercentageBarChart extends ABarChart
 {
     /**
-     * @summary     Provides a type of bar chart that acts like a percentage.
+     * @summary     Provides a bar chart type to represent percentage data.
      * @description Provides a bar chart type where the yScale domain is from
-     *              0 - 100. This mimics a percentage bar chart.
+     *              0 - 100. This mimics a percentage bar chart. Note that data 
+     *              outside of this range will round down to 100 if above 100 and
+     *              up to 0 if below zero.
+     * 
+     *              This is done by basically encapsulating a StackedBarChart
+     *              object and updating it's yScale to reflect the bounds 
+     *              explained above.
      * 
      * @requires ABarChart.js
      * 
@@ -33,6 +39,9 @@ class PercentageBarChart extends ABarChart
 
     /**
      * @summary     Updates the data array and yScale
+     * @description Similar functionality to the UpdateData function in 
+     *              ABarChart with the exception that it calls _CheckData 
+     *              instead of calling _SetUpYDomain().
      * 
      * @param {JSON Array} data The new data array we want to use for our bar chart
      */
@@ -44,12 +53,15 @@ class PercentageBarChart extends ABarChart
     }
 
     /**
-     * @summary Checks data array to ensure all values are within domain.
+     * @summary     Checks data array to ensure all values are within domain.
+     * @description Iterate through all of the data elements in _data and ensures
+     *              that they are within the bounds.
      */
     _CheckData()
     {
         this._data.forEach(d => {
             if (d.value > 100) d.value = 100;
+            if (d.value < 0)   d.value = 0;
         }); 
     }
 

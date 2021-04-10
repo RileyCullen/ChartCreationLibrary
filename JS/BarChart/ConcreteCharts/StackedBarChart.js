@@ -19,6 +19,9 @@ class StackedBarChart extends ABarChart
 
     /**
      * @summary     Creates the stacked bar chart.
+     * @description See BasicBarChart.js for the description. The intent is the
+     *              same with the exception that this class defines its own
+     *              _BindData and _DrawBars functions.
      */
     CreateBarChart()
     {
@@ -31,6 +34,9 @@ class StackedBarChart extends ABarChart
 
     /**
      * @summary     Binds data to custom DOM elements.
+     * @description See BasicBarChart.js for intent. The only real difference
+     *              is that this class needs to also bind an id to each custom
+     *              DOM element.
      */
     _BindData(custom)
     {
@@ -48,7 +54,8 @@ class StackedBarChart extends ABarChart
     }
 
     /**
-     * @summary Adds bars to the Konva.Group
+     * @summary     Adds bars to the Konva.Group.
+     * @description See BasicBarChart for the description. 
      */
     _DrawBars(custom)
     {
