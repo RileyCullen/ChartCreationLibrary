@@ -36,7 +36,7 @@ class ChartHandler
             'group': group,
         };
         group.setAttr('id', this._curr);
-        group.setAttr('name', 'Chart ' + type);
+        group.setAttr('name', 'Selectable Chart ' + type);
     }
 
     /**
