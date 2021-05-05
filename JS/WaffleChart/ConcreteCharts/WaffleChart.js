@@ -71,6 +71,38 @@ class WaffleChart extends AWaffleChart
     }
 
     /**
+     * @summmary    Updates icon in waffle chart based on iconNum.
+     * @description Updates presetA if iconNum is equal to 0 and presetB if 
+     *              iconNum is equal to 1.
+     * 
+     * @param {JSON}   param0   A JSON object that encloses two variables.
+     * @param {int}    iconNum  The icon index that will be updated.
+     * @param {string} iconCode The unicode for a particular icon.
+     */
+    UpdateIcon({iconNum = -1, iconCode = -1})
+    {
+        if (iconCode == null || iconCode == '') return;
+
+        iconCode = String.fromCharCode(parseInt(iconCode,16));
+
+        if (iconNum == 0) {
+            this._presetA = GenerateIconDataArray({
+                icon: iconCode,
+                color: this._presetA.color,
+                offset: this._presetA.offset,
+                font: this._presetA.font,
+            });
+        } else if (iconNum == 1) {
+            this._presetB = GenerateIconDataArray({
+                icon: iconCode,
+                color: this._presetB.color,
+                offset: this._presetB.offset,
+                font: this._presetB.font,
+            });
+        } 
+    }
+
+    /**
      * @summary     Binds data to the parameterized custom DOM element.
      * @description Uses D3.js to bind the parameterized data array to custom 
      *              DOM elements located in memory.
