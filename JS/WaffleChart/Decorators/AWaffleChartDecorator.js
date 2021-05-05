@@ -34,5 +34,7 @@ class AWaffleChartDecorator extends AWaffleChart
         this._numerator = chart._numerator;
         this._denominator = chart._denominator;
         this._chart = chart;
+        this._presetA = chart._presetA;
+        this._presetB = chart._presetB;
     }
 }
