@@ -34,8 +34,29 @@ class WaffleEditor
     CreateWaffleEditor()
     {
         var main = document.createElement('div');
-        main.appendChild(this._CreateNumeratorEditor());
-        main.appendChild(this._CreateDenominatorEditor());
+
+        var dataSection = this._CreateBackgroundRegion({
+            width: 275,
+            height: 90
+        });
+        dataSection.style.padding = 10 + 'px';
+        dataSection.style.marginBottom = 30 + 'px';
+        main.appendChild(dataSection);
+
+        dataSection.appendChild(this._CreateNumeratorEditor());
+        dataSection.appendChild(this._CreateDenominatorEditor());
+
+        var iconSection = this._CreateBackgroundRegion({
+            width: 275,
+            height: 90
+        });
+        iconSection.style.padding = 10 + 'px';
+        iconSection.style.marginBottom = 60 + 'px';
+        main.appendChild(iconSection);
+
+        iconSection.appendChild(this._CreateIconAEditor())
+        iconSection.appendChild(this._CreateIconBEditor())
+        
         main.appendChild(this._CreateButton());
         return main;
     }
@@ -48,6 +69,87 @@ class WaffleEditor
     _AddBottomPadding(elem)
     {
         elem.style.paddingBottom = 25 + 'px';
+    }
+
+    _CreateBackgroundRegion({width, height, color = 'white'})
+    {
+        var backgroundDiv = document.createElement('div');
+        backgroundDiv.style.width = width + 'px';
+        backgroundDiv.style.height = height + 'px';
+        backgroundDiv.style.backgroundColor = color;
+        backgroundDiv.style.boxSizing = 'border-box';
+        return backgroundDiv;
+    }
+
+    _CreateContainer({id})
+    {
+        var container = document.createElement('div');
+        container.style.display = 'flex';
+        container.style.alignItems = 'center';
+        container.id = id;
+        this._AddBottomPadding(container); 
+        return container;
+    }
+
+    _CreateLabel({id, innerHTML, paddingRight})
+    {
+        var labelText = document.createElement('label');
+        labelText.id = id;
+        labelText.innerHTML = innerHTML;
+        labelText.style.paddingRight = paddingRight + 'px'; 
+        return labelText;
+    }
+
+    _CreateTextarea({id})
+    {
+        var textarea = document.createElement('textarea');
+        textarea.rows = this._rows;
+        textarea.col = this._col;
+        textarea.id = id;
+        textarea.style.resize = 'none'; 
+        return textarea;
+    }
+
+    _CreateIconAEditor()
+    {
+        var iconAContainer = this._CreateContainer({
+            id: 'IconAContainer'
+        });
+
+        var labelText = this._CreateLabel({
+            id: 'IconALabel',
+            innerHTML: 'Icon A Unicode: ',
+            paddingRight: 15
+        });
+        iconAContainer.appendChild(labelText);
+
+        var textarea = this._CreateTextarea({
+            id: 'IconAInput'
+        })
+        iconAContainer.appendChild(textarea);
+
+        return iconAContainer; 
+    }
+
+    _CreateIconBEditor()
+    {
+        var iconBContainer = this._CreateContainer({
+            id: 'IconBContainer'
+        });
+
+        var labelText = this._CreateLabel({
+            id: 'IconBLabel',
+            innerHTML: 'Icon B Unicode: ',
+            paddingRight: 15
+        });
+        iconBContainer.appendChild(labelText);
+
+        var textarea = this._CreateTextarea({
+            id: 'IconBInput'
+        })
+        iconBContainer.appendChild(textarea);
+
+        return iconBContainer; 
     }
 
     /**
@@ -203,12 +305,19 @@ class WaffleEditor
     _UpdateWaffleChart()
     {
         var presetAValue = document.getElementById('PresetAInput').value,
-            presetBValue = document.getElementById('PresetBInput').value;
-
-        if (presetAValue == null || presetAValue == '' || presetBValue == null || presetBValue == '') return;
-        if (isNaN(presetAValue) || isNaN(presetBValue)) return;
+            presetBValue = document.getElementById('PresetBInput').value,
+            iconAValue   = document.getElementById('IconAInput').value,
+            iconBValue   = document.getElementById('IconBInput').value;
 
         this._handlerElem.chart.UpdateData(parseInt(presetAValue), parseInt(presetBValue));
+        this._handlerElem.chart.UpdateIcon({
+            iconNum: 0, 
+            iconCode: iconAValue
+        });
+        this._handlerElem.chart.UpdateIcon({
+            iconNum: 1,
+            iconCode: iconBValue,
+        })
 
         var prev = this._handlerElem.chart;
         for (var i = 0; i <= this._handlerElem.decoratorSize; i++) {

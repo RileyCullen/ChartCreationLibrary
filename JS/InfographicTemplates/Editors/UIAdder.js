@@ -24,6 +24,8 @@ class UIAdder
         this._AddRemovalUI();
         this._isEditing = false;
 
+        this._editor = null;
+
         this._AddCSS();
     }
 
