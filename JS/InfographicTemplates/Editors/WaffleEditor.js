@@ -71,6 +71,19 @@ class WaffleEditor
         elem.style.paddingBottom = 25 + 'px';
     }
 
+    /**
+     * @summary     Creates a <div> element to group other HTML elements.
+     * @description Creates a <div> element styled with the width, height,
+     *              and color parameters passed by the caller.
+     * 
+     * @param {JSON}   param0 A JSON object that holds the width, height, and 
+     *                        color of the background region.
+     * @param {double} width  The width of the background region.
+     * @param {double} height The height of the background region.
+     * @param {string} color  The color of the background region.
+     * 
+     * @returns A <div> element.
+     */
     _CreateBackgroundRegion({width, height, color = 'white'})
     {
         var backgroundDiv = document.createElement('div');
@@ -81,6 +94,17 @@ class WaffleEditor
         return backgroundDiv;
     }
 
+    /**
+     * @summary     Creates a container for the label and textarea.
+     * @description Abstracts the creation of a container for the label and 
+     *              textarea so that they are all styled the same.
+     * 
+     * @param {JSON}   param0 A JSON object containing the ID of the <div> 
+     *                        container.
+     * @param {string} id     The ID for the <div> container.
+     * 
+     * @returns A container for the label and textarea.
+     */
     _CreateContainer({id})
     {
         var container = document.createElement('div');
@@ -91,6 +115,11 @@ class WaffleEditor
         return container;
     }
 
+    /**
+     * @summary     Creates a <label> element.
+     * 
+     * @returns A <label> element.
+     */
     _CreateLabel({id, innerHTML, paddingRight})
     {
         var labelText = document.createElement('label');
@@ -100,6 +129,10 @@ class WaffleEditor
         return labelText;
     }
 
+    /**
+     * @summary Creates a textarea.
+     * @returns A textarea.
+     */
     _CreateTextarea({id})
     {
         var textarea = document.createElement('textarea');
@@ -110,6 +143,11 @@ class WaffleEditor
         return textarea;
     }
 
+    /**
+     * @summary Creates the first icon editor.
+     * 
+     * @returns A DOM container with the A icon editor.
+     */
     _CreateIconAEditor()
     {
         var iconAContainer = this._CreateContainer({
@@ -131,6 +169,11 @@ class WaffleEditor
         return iconAContainer; 
     }
 
+    /**
+     * @summary Creates the second icon editor.
+     * 
+     * @returns A DOM container with the B icon editor.
+     */
     _CreateIconBEditor()
     {
         var iconBContainer = this._CreateContainer({
