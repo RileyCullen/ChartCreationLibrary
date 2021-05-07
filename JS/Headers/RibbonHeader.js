@@ -18,7 +18,7 @@ class RibbonHeader
      * @param {Double}      iWidth   The width of the infographic.
      * @param {Double}      iHeight  The height of the infographic.
      */
-    constructor(colorOne, colorTwo, group, hWidth, hHeight, iWidth, iHeight)
+    constructor({colorOne, colorTwo, group, hWidth, hHeight, iWidth, iHeight})
     {
         this._colorOne = colorOne;
         this._colorTwo = colorTwo;

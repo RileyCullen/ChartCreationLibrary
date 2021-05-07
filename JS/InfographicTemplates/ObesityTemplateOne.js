@@ -24,8 +24,15 @@ class ObesityTemplateOne extends AInfographic
         header.add(ribbonGroup);
 
         var ribbonHeight = 35, ribbonWidth = 500;
-        var ribbon = new RibbonHeader('#94bd31', '#5f9400', ribbonGroup, ribbonWidth,
-            ribbonHeight, this._chartWidth, this._chartHeight);
+        var ribbon = new RibbonHeader({
+            colorOne: '#94bd31', 
+            colorTwo: '#5f9400', 
+            group: ribbonGroup, 
+            hWidth: ribbonWidth,
+            hHeight: ribbonHeight, 
+            iWidth: this._chartWidth,
+            iHeight: this._chartHeight
+        });
         ribbon.CreateHeader();
 
         var montserrat200 = this._quillMap('Montserrat', 200);
