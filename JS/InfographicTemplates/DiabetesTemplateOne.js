@@ -1,0 +1,286 @@
+class DiabetesTemplateOne extends AInfographic
+{
+    constructor()
+    {
+        super(900, 635);
+    }
+
+    CreateInfographic()
+    {
+        this._CreateHeader();
+        this._CreateTitle();
+        this._CreateContent();
+        this._FinalizeInfog();
+    }
+
+    Draw()  
+    {
+        this._main.draw();
+    }
+
+    _CreateHeader()
+    {
+        var header = new Konva.Group({
+            x: 0,
+            y: 0
+        });
+        var ribbonGroup = new Konva.Group({
+            x: 0,
+            y: 15
+        })
+
+        this._main.add(header);
+        header.add(ribbonGroup);
+
+        // Creating Ribbon
+        var ribbonWidth = 550, ribbonHeight = 35;
+        var ribbon = new RibbonHeader({
+            colorOne: '#94bd31', 
+            colorTwo: '#5f9400', 
+            group: ribbonGroup, 
+            hWidth: ribbonWidth,
+            hHeight: ribbonHeight, 
+            iWidth: this._chartWidth,
+            iHeight: this._chartHeight
+        });
+        ribbon.CreateHeader();
+
+        // Creating Ribbon Text
+        var montserrat200 = this._quillMap('Montserrat', 200);
+        var ribbonFontFamily = '"Montserrat", sans-serif';
+        var ribbonTextDiv = document.createElement('div');
+        ribbonTextDiv.style.color = 'white';
+        var ribbonText = '<p><span style="font-family: Montserrat, sans-serif; font-size: 20px; ">' +
+            'AN EVERYDAY HEALTH INFOGRAM</span></p>';
+        ribbonTextDiv.innerHTML = ribbonText;
+        this._textHandler.AddTextElem(ribbonTextDiv, ribbonGroup, 
+            (this._chartWidth / 2) - 170 , 
+            (ribbonHeight / 2) - this._GetTextWidth('M', 20, ribbonFontFamily) / 2 - 2);
+        this._textHandler.SetCSSInfo(this._textHandler.GetCurrID(),{ 
+            fontFamily: montserrat200,
+            fontSize: '20px',
+            textColor: ribbonTextDiv.style.color,
+            lineHeight: '1.0',
+            align: 'center'
+        });
+    }
+
+    _CreateTitle()
+    {
+        var group = new Konva.Group({
+            x: 0,
+            y: 50,
+        });
+        this._main.add(group);
+
+        // Creating Title text
+        var titleFont = '"Roboto", sans-serif', titleFontSize = 60;
+        var roboto400 = this._quillMap('Roboto', 400);
+        var titleWidth = this._GetTextWidth('THE RISING PRICE');
+        var titleTextDiv = document.createElement('div');
+        titleTextDiv.style.color = 'black';
+
+        var titleText = '' + 
+            '<p style="margin: 0px;"><span style="font-family: Roboto, sans-serif; font-size: 60px; line-height: 1.0;">THE RISING PRICE</span></p>' +
+            '<p style="margin: 0px;"><span style="font-family: Roboto, sans-serif; font-size: 82px; line-height: 1.0;">OF DIABETES</span></p>';
+        titleTextDiv.innerHTML = titleText;
+        this._textHandler.AddTextElem(titleTextDiv, group, this._CenterXAbout(titleWidth, 115),
+            30);
+        this._textHandler.SetCSSInfo(this._textHandler.GetCurrID(), {
+            fontFamily: roboto400,
+            fontSize: '60px',
+            textColor: 'black',
+            lineHeight: '1.0',
+        });
+        this._textHandler.SetCSSInfo(this._textHandler.GetCurrID(),{ 
+            fontFamily: roboto400,
+            fontSize: '82px',
+            textColor: 'black',
+            lineHeight: '1.0',
+        });
+
+        // Creating Sub title text
+        var openSans = this._quillMap('Open Sans');
+        var subTitleFontSize = 20;
+        var subTitleWidth = this._GetTextWidth('Diabetes costs in the United States climbed',
+            subTitleFontSize, '"Open Sans", sans-serif');
+        
+        var subTitleDiv = document.createElement('div');
+        var subTitleText = '' + 
+            '<p style="text-align: center; margin: 0px;"><span style="font-family: Open Sans, sans-serif; font-size: 20px; line-height: 1.5;">Diabetes costs in the United States climbed</span></p>' + 
+            '<p style="text-align: center; margin: 0px;"><span style="font-family: Open Sans, sans-serif; font-size: 20px; line-height: 1.5;">to $245 billion last year.</span></p>';
+        subTitleDiv.innerHTML = subTitleText;
+        this._textHandler.AddTextElem(subTitleDiv, group, this._CenterXAbout(subTitleWidth, (this._chartWidth / 2)),
+            185);
+        this._textHandler.SetCSSInfo(this._textHandler.GetCurrID(), {
+            fontFamily: openSans,
+            fontSize: subTitleFontSize + 'px',
+            textColor: 'black',
+            lineHeight: '1.5',
+            align: 'center'
+        });
+        this._textHandler.SetCSSInfo(this._textHandler.GetCurrID(), {
+            fontFamily: openSans,
+            fontSize: subTitleFontSize + 'px',
+            textColor: 'black',
+            lineHeight: '1.5',
+            align: 'center',
+        })
+
+    }
+
+    _CreateContent()
+    {
+        var textColor = '#455f06';
+        this._CreateSectionOne({
+            textColor: textColor
+        });
+        this._CreateSectionTwo({
+            textColor: textColor
+        });
+        this._CreateSectionThree({
+            textColor: textColor
+        });
+    }
+
+    _CreateSectionOne({textColor})
+    {
+        // Set up 
+        var sectionOne = new Konva.Group({
+            x: 30,
+            y: 320
+        });
+        this._main.add(sectionOne);
+
+        // Creating background region
+        this._CreateBackgroundRect({
+            width: 260,
+            height: 290,
+            group: sectionOne,
+        });
+
+        // Adding text
+        var openSans = this._quillMap('Open Sans');
+        var textFontSize = 18;
+        var sectionTitleDiv = document.createElement('div');
+        sectionTitleDiv.style.color = textColor;
+        var text = 
+            '<p style="margin: 0px; text-align: center;"><span style="font-family: Open Sans, sans-serif; font-size: 18px; line-height: 1.5">What the U.S. pays for</span></p>' +
+            '<p style="margin: 0px; text-align: center;"><span style="font-family: Open Sans, sans-serif; font-size: 18px; line-height: 1.5">diagnosed diabetes.</span></p>'
+        sectionTitleDiv.innerHTML = text;
+        this._textHandler.AddTextElem(sectionTitleDiv, sectionOne, 35, 15, 0);
+        this._textHandler.SetCSSInfo(this._textHandler.GetCurrID(), {
+            fontFamily: openSans,
+            fontSize: textFontSize + 'px',
+            textColor: textColor,
+            lineHeight: 1.5,
+            align: 'center', 
+        });
+        this._textHandler.SetCSSInfo(this._textHandler.GetCurrID(), {
+            fontFamily: openSans,
+            fontSize: textFontSize + 'px',
+            textColor: textColor,
+            lineHeight: 1.5,
+            align: 'center', 
+        });
+    }
+
+    _CreateSectionTwo({textColor})
+    {
+        var sectionTwo = new Konva.Group({
+            x: this._chartWidth / 2 + 30,
+            y: 320
+        });
+        this._main.add(sectionTwo);
+        this._CreateBackgroundRect({
+            width: 260,
+            height: 290,
+            group: sectionTwo,
+        });
+
+        // Adding text
+        var openSans = this._quillMap('Open Sans');
+        var textFontSize = 18;
+        var sectionTitleDiv = document.createElement('div');
+        sectionTitleDiv.style.color = textColor;
+        var text = 
+            '<p style="margin: 0px; text-align: center;"><span style="font-family: Open Sans, sans-serif; font-size: 18px; line-height: 1.5">Medical costs for people</span></p>' +
+            '<p style="margin: 0px; text-align: center;"><span style="font-family: Open Sans, sans-serif; font-size: 18px; line-height: 1.5">with diabetes are 2.3</span></p>' + 
+            '<p style="margin: 0px; text-align: center;"><span style="font-family: Open Sans, sans-serif; font-size: 18px; line-height: 1.5">times higher</span></p>'
+        sectionTitleDiv.innerHTML = text;
+        this._textHandler.AddTextElem(sectionTitleDiv, sectionTwo, 30, 190, 0);
+        this._textHandler.SetCSSInfo(this._textHandler.GetCurrID(), {
+            fontFamily: openSans,
+            fontSize: textFontSize + 'px',
+            textColor: textColor,
+            lineHeight: 1.5,
+            align: 'center', 
+        });
+        this._textHandler.SetCSSInfo(this._textHandler.GetCurrID(), {
+            fontFamily: openSans,
+            fontSize: textFontSize + 'px',
+            textColor: textColor,
+            lineHeight: 1.5,
+            align: 'center', 
+        });
+        this._textHandler.SetCSSInfo(this._textHandler.GetCurrID(), {
+            fontFamily: openSans,
+            fontSize: textFontSize + 'px',
+            textColor: textColor,
+            lineHeight: 1.5,
+            align: 'center', 
+        });
+    }
+
+    _CreateSectionThree({textColor})
+    {
+        var sectionThree = new Konva.Group({
+            x: 30, 
+            y: 635
+        });
+        this._main.add(sectionThree);
+        this._CreateBackgroundRect({
+            width: 575,
+            height: 245,
+            group: sectionThree,
+        });
+
+        // Adding text
+        var openSans = this._quillMap('Open Sans');
+        var textFontSize = 18;
+        var sectionTitleDiv = document.createElement('div');
+        sectionTitleDiv.style.color = textColor;
+        var text = 
+            '<p style="margin: 0px; text-align: center;"><span style="font-family: Open Sans, sans-serif; font-size: 18px; line-height: 1.5">California spent the most on diabetes in 2012.</span></p>' +
+            '<p style="margin: 0px; text-align: center;"><span style="font-family: Open Sans, sans-serif; font-size: 18px; line-height: 1.5">Florida came in second at $18.9 million, followed by Texas.</span></p>'
+        sectionTitleDiv.innerHTML = text;
+        this._textHandler.AddTextElem(sectionTitleDiv, sectionThree, 50, 175, 0);
+        this._textHandler.SetCSSInfo(this._textHandler.GetCurrID(), {
+            fontFamily: openSans,
+            fontSize: textFontSize + 'px',
+            textColor: textColor,
+            lineHeight: 1.5,
+            align: 'center', 
+        });
+        this._textHandler.SetCSSInfo(this._textHandler.GetCurrID(), {
+            fontFamily: openSans,
+            fontSize: textFontSize + 'px',
+            textColor: textColor,
+            lineHeight: 1.5,
+            align: 'center', 
+        });
+    }
+
+    _CreateBackgroundRect({width, height, group})
+    {
+        var rect = new Konva.Rect({
+            cornerRadius: 10, 
+            x: 0, 
+            y: 0,
+            width: width,
+            height: height,
+            fill: '#94bd31',
+        });
+        group.add(rect);
+    }
+}
