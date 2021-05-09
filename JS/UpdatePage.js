@@ -15,6 +15,9 @@ function UpdatePage(infogNum)
             case 2: 
                 infogObj = new ViolenceTemplateOne();
                 break;
+            case 3:
+                infogObj = new DiabetesTemplateOne();
+                break;
         }
         infogObj.CreateInfographic();
         infogObj.Draw();
