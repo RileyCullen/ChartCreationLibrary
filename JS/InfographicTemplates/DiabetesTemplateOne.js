@@ -146,6 +146,7 @@ class DiabetesTemplateOne extends AInfographic
     _CreateSectionOne({textColor})
     {
         // Set up 
+        var width = 280, height = 290;
         var sectionOne = new Konva.Group({
             x: 30,
             y: 320
@@ -154,8 +155,8 @@ class DiabetesTemplateOne extends AInfographic
 
         // Creating background region
         this._CreateBackgroundRect({
-            width: 260,
-            height: 290,
+            width: width,
+            height: height,
             group: sectionOne,
         });
 
@@ -168,7 +169,7 @@ class DiabetesTemplateOne extends AInfographic
             '<p style="margin: 0px; text-align: center;"><span style="font-family: Open Sans, sans-serif; font-size: 18px; line-height: 1.5">What the U.S. pays for</span></p>' +
             '<p style="margin: 0px; text-align: center;"><span style="font-family: Open Sans, sans-serif; font-size: 18px; line-height: 1.5">diagnosed diabetes.</span></p>'
         sectionTitleDiv.innerHTML = text;
-        this._textHandler.AddTextElem(sectionTitleDiv, sectionOne, 35, 15, 0);
+        this._textHandler.AddTextElem(sectionTitleDiv, sectionOne, 45, 15, 0);
         this._textHandler.SetCSSInfo(this._textHandler.GetCurrID(), {
             fontFamily: openSans,
             fontSize: textFontSize + 'px',
@@ -183,17 +184,84 @@ class DiabetesTemplateOne extends AInfographic
             lineHeight: 1.5,
             align: 'center', 
         });
+
+        // Creating Line Chart
+        var chartWidth = 120, chartHeight = 150;
+        var chartGroup = new Konva.Group({
+            x: (width - chartWidth) * (1/2),
+            y: height / 2 - 30
+        });
+        sectionOne.add(chartGroup);
+        var data = [
+            {
+                date: '2007',
+                value: 174
+            },
+            {
+                date: '2012',
+                value: 245
+            }
+        ]
+
+        var font = {
+            fontSize: 15,
+            fontFamily: 'Open Sans, sans-serif',
+            textColor: textColor
+        }
+
+        var chart = new LineChart({
+            data: data,
+            group: chartGroup,
+            chartWidth: chartWidth,
+            chartHeight: chartHeight,
+            lineWidth: 4,
+            pointRadius: 8,
+            lineColor: textColor,
+            pointColor: textColor,
+            internalOffsetX: 16,
+            internalOffsetY: 13,
+        });
+        var xAxisDecorator = new LineXAxisDecorator({
+            chart: chart,
+            lineColor: textColor,
+            lineStrokeWidth: 6,
+            tickStrokeWidth: 0,
+            font: font,
+        });
+        var yAxisDecorator = new LineYAxisDecorator({
+            chart: xAxisDecorator,
+            axisLabel: '$ in Billions',
+            lineColor: textColor,
+            lineStrokeWidth: 6,
+            tickStrokeWidth: 0,
+            font: font,
+        });
+        var dataValueDecorator = new LineDataValueDecorator({
+            chart: yAxisDecorator,
+            font: {
+                fontSize: 30,
+                fontFamily: font.fontFamily,
+                fontColor: 'white',
+            }
+        })
+
+        dataValueDecorator.CreateChart();
+
+        this._chartHandler.AddChart(chart, chartGroup, 'Line')
+        this._chartHandler.AddDecorator(xAxisDecorator, this._chartHandler.GetCurrChartID());
+        this._chartHandler.AddDecorator(yAxisDecorator, this._chartHandler.GetCurrChartID());
+        this._chartHandler.AddDecorator(dataValueDecorator, this._chartHandler.GetCurrChartID());
     }
 
     _CreateSectionTwo({textColor})
     {
         var sectionTwo = new Konva.Group({
-            x: this._chartWidth / 2 + 30,
+            x: this._chartWidth / 2 + 10,
             y: 320
         });
         this._main.add(sectionTwo);
         this._CreateBackgroundRect({
-            width: 260,
+            width: 280,
             height: 290,
             group: sectionTwo,
         });
@@ -208,7 +276,7 @@ class DiabetesTemplateOne extends AInfographic
             '<p style="margin: 0px; text-align: center;"><span style="font-family: Open Sans, sans-serif; font-size: 18px; line-height: 1.5">with diabetes are 2.3</span></p>' + 
             '<p style="margin: 0px; text-align: center;"><span style="font-family: Open Sans, sans-serif; font-size: 18px; line-height: 1.5">times higher</span></p>'
         sectionTitleDiv.innerHTML = text;
-        this._textHandler.AddTextElem(sectionTitleDiv, sectionTwo, 30, 190, 0);
+        this._textHandler.AddTextElem(sectionTitleDiv, sectionTwo, 40, 190, 0);
         this._textHandler.SetCSSInfo(this._textHandler.GetCurrID(), {
             fontFamily: openSans,
             fontSize: textFontSize + 'px',
