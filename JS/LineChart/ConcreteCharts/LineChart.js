@@ -1,7 +1,20 @@
+// Cullen, Riley
+// LineChart.js
+// May 13, 2021
+
 class LineChart extends ALineChart 
 {
+    /**
+     * @summary     A concrete, basic line chart type.
+     * @description A basic line chart type that utilizes D3's scaleTime function.
+     * 
+     * @param {*} param1 See ALineChart.js for the meaning of each of the elements
+     *                   in the JSON object.
+     */
     constructor({data, group, chartWidth, chartHeight, lineWidth = 1, 
-        pointRadius = 1, pointColor = 'none', lineColor = 'black'})
+        pointRadius = 1, pointColor = 'none', lineColor = 'black', internalOffsetX = 0,
+        internalOffsetY = 0,
+    })
     {
         super({ 
             data: data, 
@@ -11,10 +24,18 @@ class LineChart extends ALineChart
             lineWidth: lineWidth,
             pointRadius: pointRadius,
             lineColor: lineColor,
-            pointColor: pointColor
+            pointColor: pointColor, 
+            internalOffsetX: internalOffsetX,
+            internalOffsetY: internalOffsetY,
         });
     }
 
+    /**
+     * @summary     Creates a basic line chart.
+     * @description Creates a basic line chart by binding the entries in data 
+     *              to custom DOM elements then using Konva.JS to draw the 
+     *              chart on the canvas.
+     */
     CreateChart()
     {
         var virtualCanvas = document.createElement('custom');
@@ -22,10 +43,17 @@ class LineChart extends ALineChart
 
         this._BindData(custom);
         var orderedPairList = this._CreateOrderedPairList(custom)
-        console.log(orderedPairList);
         this._DrawGraph(custom, orderedPairList)
     }
 
+    /**
+     * @summary     Binds the data entries in _data to custom DOM elements.
+     * @description Uses D3 to create custom DOM elements that we will bind the 
+     *              data in _data to.
+     * 
+     * @param {DOM element} custom The parent DOM element we will add all of the 
+     *                             custom DOM elements to.
+     */
     _BindData(custom)
     {
         var selection = custom.selectAll('custom.point')
@@ -34,19 +62,28 @@ class LineChart extends ALineChart
             .append('custom')
             .attr('class', 'point')
             .attr('x', (d) => {
-                return this._xScale(d.date);
+                return this._internalOffsetX + this._xScale(d.date);
             })
             .attr('y', (d) => {
-                return this._yScale(d.value);
+                return this._internalOffsetY + this._yScale(d.value);
             })
             .attr('pointColor', this._pointColor)
             .attr('pointRadius', this._pointRadius)
     }
 
+    /**
+     * @summary     Creates a list of ordered pairs from the data bound to the 
+     *              DOM elements.
+     * @description Creates a list of ordered pairs that will be used to draw 
+     *              the points and lines on the chart.
+     * 
+     * @param {DOM Element} custom See _BindData.
+     * 
+     * @returns The ordered pair list.
+     */
     _CreateOrderedPairList(custom)
     {
         var elements = custom.selectAll('custom.point');
-        var helper = new Konva.Group();
 
         var helperList = []
         elements.each(function(d, i){
@@ -72,6 +109,15 @@ class LineChart extends ALineChart
         return list;
     }
 
+    /**
+     * @summary     Draws the chart on the canvas.
+     * @description Uses the custom DOM elements bound in custom to draw the 
+     *              points and lines on canvas using Konva.JS.
+     * 
+     * @param {DOM Element} custom See _BindData.
+     * @param {JSON Array}  list   A list of ordered pairs to help us draw the
+     *                             points and lines in the chart.
+     */
     _DrawGraph(custom, list)
     {
         var elements = custom.selectAll('custom.point');

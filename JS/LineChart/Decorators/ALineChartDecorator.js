@@ -1,5 +1,17 @@
+// Cullen, Riley
+// ALineChartDecorator.js
+// May 13, 2021
+
 class ALineChartDecorator extends ALineChart 
 {
+    /**
+     * @summary     Abstract class defining the Decorator type for the LineChart
+     *              type.
+     * @description An abstract class that provides a common interface for the 
+     *              line chart decorators.
+     * 
+     * @param {ALineChart} chart The chart we want to decorate.
+     */
     constructor(chart)
     {
         super({
@@ -10,7 +22,9 @@ class ALineChartDecorator extends ALineChart
             lineWidth: chart._lineWidth,
             pointRadius: chart._pointRadius,
             pointColor: chart._pointColor,
-            lineColor: chart._lineColor
+            lineColor: chart._lineColor,
+            internalOffsetX: chart._internalOffsetX,
+            internalOffsetY: chart._internalOffsetY,
         });
         this._chart = chart;
         
@@ -20,6 +34,13 @@ class ALineChartDecorator extends ALineChart
         }
     }
 
+    /**
+     * @summary     Updates the decorator.
+     * @description Updates the decorators chart, which will then update the 
+     *              chart's instance variables.
+     * 
+     * @param {ALineChart} chart The chart we want to base our update on.
+     */
     UpdateDecorator(chart) { }
 
     /**
