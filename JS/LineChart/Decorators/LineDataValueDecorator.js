@@ -1,5 +1,19 @@
+// Cullen, Riley
+// LineDataValueDecorator.js
+// May 13, 2021
+
 class LineDataValueDecorator extends ALineChartDecorator
 {
+    /**
+     * @summary     Displays each data value point on the chart.
+     * @description For each data element in _data, this decorator will create
+     *              a label displaying the point's value on the chart.
+     * 
+     * @param {ALineChart} chart    The chart element we want decorate.
+     * @param {string}     location The location relative the point we want to
+     *                              display the decorator.
+     * @param {JSON Array} font     The font of the data value decorator.
+     */
     constructor({
         chart, 
         location = 'bottom', 
@@ -15,12 +29,21 @@ class LineDataValueDecorator extends ALineChartDecorator
         this._location = location;
     }
 
+    /**
+     * @summary     Creates a chart with the data value decorators.
+     * @description Calls _chart's CreateChart function and then calls _AddValues.
+     */
     CreateChart() 
     {
         this._chart.CreateChart();
         this._AddValues();
     }
 
+    /**
+     * @summary     Creates the data value decorators.
+     * @description Iterates through all of the entries in _data and creates a
+     *              data value decorator.
+     */    
     _AddValues()
     {
         this._data.forEach((d) => {
