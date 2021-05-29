@@ -20,7 +20,7 @@ class ABarChartDecorator extends ABarChart
      */
     constructor(chart) 
     {
-        super(chart._data, chart._group, chart._chartWidth, chart._chartHeight, chart._padding, chart._rotateBy);
+        super(chart._data, chart._group, chart._chartWidth, chart._chartHeight, chart._padding, chart._rotateBy, chart._chartType);
         this._chart = chart;
         this._yScale = chart._yScale;
 
@@ -61,5 +61,37 @@ class ABarChartDecorator extends ABarChart
         canvas.remove();
 
         return helper;
+    }
+
+    _GetIconWidth(icon, iconSize)
+    {
+        var canvas = document.createElement('canvas');
+        var ctx    = canvas.getContext('2d');
+
+        document.getElementById('body').appendChild(canvas)
+
+        ctx.font = '900 ' + iconSize + 'px ' + '"Font Awesome 5 Free"';
+        var textMetrics = ctx.measureText(icon);
+        var width = Math.abs(textMetrics.actualBoundingBoxLeft 
+            - textMetrics.actualBoundingBoxRight);
+
+        canvas.remove();
+
+        return width;
+    }
+
+    _GetIconHeight(icon, iconSize)
+    {
+        var canvas = document.createElement('canvas');
+        var ctx    = canvas.getContext('2d');
+
+        ctx.font = '900 ' + iconSize + 'px ' + '"Font Awesome 5 Free"';
+        var textMetrics = ctx.measureText(icon);
+        var height = Math.abs(textMetrics.actualBoundingBoxAscent) - 
+            Math.abs(textMetrics.actualBoundingBoxDescent);
+        
+        canvas.remove();
+
+        return height;
     }
 }

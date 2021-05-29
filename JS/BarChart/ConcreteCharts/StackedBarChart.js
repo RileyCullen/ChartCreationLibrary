@@ -14,7 +14,7 @@ class StackedBarChart extends ABarChart
      */
     constructor(data, group, width, height, padding, rotateBy = 0)
     {
-        super(data, group, width, height, padding, rotateBy);
+        super(data, group, width, height, padding, rotateBy, 'Stacked');
     }   
 
     /**

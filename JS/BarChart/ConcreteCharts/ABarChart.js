@@ -31,7 +31,7 @@ class ABarChart
      *                               (note that this value can only be 0 or 90
      *                               and goes in the clockwise direction).
     */
-    constructor(data, group, width, height, padding, rotateBy)
+    constructor(data, group, width, height, padding, rotateBy, chartType)
     {
         if (this.constructor === ABarChart) {
             throw new TypeError('Abstract class "ABarChart" cannot be instantiated');
@@ -52,6 +52,8 @@ class ABarChart
             .padding(this._padding);
         this._yScale = d3.scaleLinear()
             .range([this._chartHeight, 0]);
+
+        this._chartType = chartType;
 
         this._SetUpXDomain();
         this._SetUpYDomain();
@@ -162,6 +164,16 @@ class ABarChart
         }
         return max;
     }
+
+    _FindMinCategory()
+    {
+        var index = 0;
+        for (var i = 1; i < this._data.length; i++) {
+            if (this._data[i].value > this._data[i].value) index = i;
+        }
+        return this._data[index].category;
+    }
+    
 
     /**
      * @summary     Returns a set of categories.
