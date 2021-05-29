@@ -221,8 +221,19 @@ class ViolenceTemplateOne extends AInfographic
             'fontFamily': roboto, 
             'fontColor': 'black'
         };
-        var valueLabel = new DataValueDecorator(stackedBarChart, true, false, true, valueFont);
-        var categoryLabel = new CategoryLabelDecorator(valueLabel, true, true, categoryFont);
+        var valueLabel = new DataValueDecorator({
+            chart: stackedBarChart, 
+            isPercentage: true, 
+            isCategory: false, 
+            isMiddle: true, 
+            font: valueFont
+        });
+        var categoryLabel = new CategoryLabelDecorator({
+            chart: valueLabel, 
+            isWithinBars: true, 
+            isTop: true, 
+            font: categoryFont
+        });
         var descriptor = new ChartDescriptorDecorator(categoryLabel, false, {
             'fontSize': 10,
             'fontFamily': roboto,
@@ -351,10 +362,16 @@ class ViolenceTemplateOne extends AInfographic
         var barChartOne = new BasicBarChart(barChartOneData, barChartOneGroup,
             200, 200, 0.4, 0);
         var xAxisOne = new XAxisDecorator(barChartOne, 'black', 1, 0.5, xAxisFont);
-        var valueDecoratorOne = new DataValueDecorator(xAxisOne, true, false, false,{
-            'fontSize': 15,
-            'fontFamily': roboto,
-            'fontColor': 'black',
+        var valueDecoratorOne = new DataValueDecorator({
+            chart: xAxisOne, 
+            isPercentage: true, 
+            isCategory: false, 
+            isMiddle: false,
+            font: {
+                'fontSize': 15,
+                'fontFamily': roboto,
+                'fontColor': 'black',
+            }
         });
 
         this._chartHandler.AddChart(barChartOne, barChartOneGroup, 'Bar');

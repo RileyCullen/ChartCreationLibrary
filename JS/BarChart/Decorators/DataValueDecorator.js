@@ -24,14 +24,27 @@ class DataValueDecorator extends ABarChartDecorator
      *                                  values will be located at the top of the bars.
      * @param {JSON array} font         Determines font of labels
      */
-    constructor(chart, isPercentage = true, isCategory = false, isMiddle = true, 
-        font = {fontSize: 8, fontFamily: 'Times New Roman, Times, serif', fontColor: 'black'}) 
+    constructor({
+        chart, 
+        isPercentage = true, 
+        isCategory = false, 
+        isMiddle = true, 
+        font = {
+            fontSize: 8, 
+            fontFamily: 'Times New Roman, Times, serif', 
+            fontColor: 'black'
+        },
+        icon = 'none',
+        iconSize = 0
+    }) 
     {
         super(chart);
         this._font = font;
         this._isPercentage = isPercentage;
         this._isCategory = isCategory;
         this._isMiddle = isMiddle;
+        this._icon = icon;
+        this._iconSize = iconSize;
     }
 
     /**
@@ -42,7 +55,19 @@ class DataValueDecorator extends ABarChartDecorator
     CreateBarChart()
     {
         this._chart.CreateBarChart();
-        this._AddLabels();
+
+        // NOTE: We essentially need two different methods for creating the 
+        //       category labels based on what the chart type is. Essentially,
+        //       the IconBarChart class has separate rendering code from the 
+        //       Basic, Percentage, and Stacked bar chart classes. Since the 
+        //       placement of the labels are based on how the chart is rendered,
+        //       we need to call a separate helper function.
+        if (this._chartType === 'Icon') {
+            if (this._icon === 'none') throw 'No icon provided';
+            if (this._iconSize === 0) throw 'No icon size provided';
+            this._AddIconLabels();
+        }
+        else this._AddLabels();
     }
 
     /**
@@ -93,5 +118,43 @@ class DataValueDecorator extends ABarChartDecorator
         });
         this._group.add(helper);
         helper.rotate(this._rotateBy);
+    }
+
+    _AddIconLabels()
+    {
+        var helper = new Konva.Group();
+        var groups = this.GetGroups();
+        var offsetHelper = this._CreateOffsetHelper(groups);
+        var labelHeight = this._GetFontSize('M', this._font);
+
+        var minCategory = this._FindMinCategory();
+
+        this._data.forEach((d,i) => {
+            var label = d.value;
+
+            if (this._isPercentage) label += '%';
+            if (this._isCategory) label += ' ' + d.category;
+
+            var labelWidth = this._GetFontSize(label, this._font),
+                offset = (i == 0) ? 0 : this._padding,
+                iconWidth = this._GetIconWidth(this._icon, this._iconSize),
+                iconHeight = this._GetIconHeight(this._icon, this._iconSize),
+                xIcon = (this._xScale(d.category) - this._xScale(minCategory) + offset),
+                xMiddle = xIcon,
+                x = xMiddle - labelWidth / 2,
+                y = 2.1 * iconHeight / 2;
+
+            var text = new Konva.Text({
+                x: x,
+                y: y,
+                text: label,
+                fontSize: this._font.fontSize,
+                fontFamily: this._font.fontFamily,
+                fill: this._font.fontColor,
+            }); 
+
+            helper.add(text);
+        });
+        this._group.add(helper);
     }
 }

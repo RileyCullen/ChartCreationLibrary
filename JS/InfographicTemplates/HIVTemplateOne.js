@@ -197,10 +197,16 @@ class HIVTemplateOne extends AInfographic
 
         var barChart = new PercentageBarChart(barChartData, barChartGroup, 90, 115, 0.2, 90);
         var remainder = new RemainderDecorator(barChart);
-        var dataValue = new DataValueDecorator(remainder, true, true, true, {
-            'fontSize': 12,
-            'fontFamily': 'canada-type-gibson, sans-serif',
-            'fontColor': 'white',
+        var dataValue = new DataValueDecorator({
+            chart: remainder, 
+            isPercentage: true, 
+            isCategory: true, 
+            isMiddle: true, 
+            font: {
+                'fontSize': 12,
+                'fontFamily': 'canada-type-gibson, sans-serif',
+                'fontColor': 'white',
+            }
         });
 
         this._chartHandler.AddChart(barChart, barChartGroup, 'Bar');
@@ -311,7 +317,6 @@ class HIVTemplateOne extends AInfographic
             this._main.batchDraw();
         };
         logoHelper.src = "JS/InfographicTemplates/src/cdclogo.png";
-        
         footer.moveToTop();
         this._FinalizeInfog();
     }
