@@ -50,6 +50,8 @@ class ABarChartDecorator extends ABarChart
      * 
      * @param {String} text      The text we want to measure.
      * @param {JSON Object} font The font of the text we want to measure. 
+     * 
+     * NOTE: This is an old method. _GetTextWidth/_GetTextHeight should be used instead.
      */
     _GetFontSize(text, font)
     {
@@ -63,35 +65,53 @@ class ABarChartDecorator extends ABarChart
         return helper;
     }
 
-    _GetIconWidth(icon, iconSize)
+    _GetTextWidth(text, font)
     {
         var canvas = document.createElement('canvas');
         var ctx    = canvas.getContext('2d');
 
         document.getElementById('body').appendChild(canvas)
 
-        ctx.font = '900 ' + iconSize + 'px ' + '"Font Awesome 5 Free"';
-        var textMetrics = ctx.measureText(icon);
+        ctx.font = font.fontSize + 'px ' + font.fontFamily;
+        var textMetrics = ctx.measureText(text);
         var width = Math.abs(textMetrics.actualBoundingBoxLeft 
             - textMetrics.actualBoundingBoxRight);
 
         canvas.remove();
 
-        return width;
+        return width; 
     }
 
-    _GetIconHeight(icon, iconSize)
+    _GetIconWidth(icon, iconSize)
+    {
+        var font = {
+            fontSize: '900 ' + iconSize,
+            fontFamily: '"Font Awesome 5 Free"',
+        }
+        return this._GetTextWidth(icon, font);
+    }
+
+    _GetTextHeight(text, font)
     {
         var canvas = document.createElement('canvas');
         var ctx    = canvas.getContext('2d');
 
-        ctx.font = '900 ' + iconSize + 'px ' + '"Font Awesome 5 Free"';
-        var textMetrics = ctx.measureText(icon);
+        ctx.font = font.fontSize + 'px ' + font.fontFamily;
+        var textMetrics = ctx.measureText(text);
         var height = Math.abs(textMetrics.actualBoundingBoxAscent) - 
             Math.abs(textMetrics.actualBoundingBoxDescent);
         
         canvas.remove();
 
         return height;
+    }
+
+    _GetIconHeight(icon, iconSize)
+    {
+        var font = {
+            fontSize: '900 ' + iconSize,
+            fontFamily: '"Font Awesome 5 Free"',
+        }
+        return this._GetTextHeight(icon, font);
     }
 }
