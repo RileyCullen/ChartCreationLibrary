@@ -94,11 +94,6 @@ class IconBarChart extends ABarChart
         return height;
     }
 
-    _DetermineFontSize()
-    {
-
-    }
-
     _FindMaxValue()
     {
         var max = (this._data.length > 0) ? this._data[0].value : 0;
