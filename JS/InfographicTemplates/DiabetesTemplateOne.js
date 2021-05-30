@@ -298,6 +298,66 @@ class DiabetesTemplateOne extends AInfographic
             lineHeight: 1.5,
             align: 'center', 
         });
+
+        // Adding Icon Bar Chart
+        var barChartGroup = new Konva.Group({
+            x: 30,
+            y: -10
+        });
+        sectionTwo.add(barChartGroup);
+        var data = [
+            {
+                category: 'non-diabetic',
+                value: 1,
+                color: textColor,
+            },
+            {
+                category: 'diabetic',
+                value: 2.3,
+                color: textColor,
+            }
+        ];
+        var icon = '\uf48e', iconSize = 115; 
+        var barChart = new IconBarChart({
+            data: data, 
+            group: barChartGroup,
+            width: 200,
+            height: 300,
+            padding: 50,
+            angleOffset: 0,
+            icon: icon,
+            remainderColor: 'white',
+            iconSize: iconSize,
+        });
+
+        var font = {
+            fontSize: 18,
+            fontFamily: "'Open Sans', sans-serif",
+            textColor: textColor,
+        };
+        var labels = new CategoryLabelDecorator({
+            chart: barChart, 
+            isWithinBars: false, 
+            isTop: true, 
+            font: font,
+            icon: icon,
+            iconSize: iconSize,
+        });
+        var dataValues = new DataValueDecorator({
+            chart: labels, 
+            isPercentage: false, 
+            isCategory: false, 
+            isMiddle: false, 
+            font: font,
+            icon: icon,
+            iconSize: iconSize
+        });
+
+        dataValues.CreateBarChart();
+
+        this._chartHandler.AddChart(barChart, barChartGroup, 'Bar');
+        this._chartHandler.AddDecorator(labels, this._chartHandler.GetCurrChartID());
+        this._chartHandler.AddDecorator(dataValues, this._chartHandler.GetCurrChartID());
     }
 
     _CreateSectionThree({textColor})
@@ -320,7 +380,7 @@ class DiabetesTemplateOne extends AInfographic
         sectionTitleDiv.style.color = textColor;
         var text = 
             '<p style="margin: 0px; text-align: center;"><span style="font-family: Open Sans, sans-serif; font-size: 18px; line-height: 1.5">California spent the most on diabetes in 2012.</span></p>' +
-            '<p style="margin: 0px; text-align: center;"><span style="font-family: Open Sans, sans-serif; font-size: 18px; line-height: 1.5">Florida came in second at $18.9 million, followed by Texas.</span></p>'
+            '<p style="margin: 0px; text-align: center;"><span style="font-family: Open Sans, sans-serif; font-size: 18px; line-height: 1.5">Florida came in second at $18.9 million, followed by Texas.</span></p>';
         sectionTitleDiv.innerHTML = text;
         this._textHandler.AddTextElem(sectionTitleDiv, sectionThree, 50, 175, 0);
         this._textHandler.SetCSSInfo(this._textHandler.GetCurrID(), {
