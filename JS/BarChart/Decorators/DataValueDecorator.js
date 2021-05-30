@@ -35,7 +35,9 @@ class DataValueDecorator extends ABarChartDecorator
             fontColor: 'black'
         },
         icon = 'none',
-        iconSize = 0
+        iconSize = 0,
+        backgroundStroke = 'black',
+        backgroundFill = 'white',
     }) 
     {
         super(chart);
@@ -45,6 +47,8 @@ class DataValueDecorator extends ABarChartDecorator
         this._isMiddle = isMiddle;
         this._icon = icon;
         this._iconSize = iconSize;
+        this._backgroundStroke = backgroundStroke;
+        this._backgroundFill = backgroundFill;
     }
 
     /**
@@ -79,6 +83,7 @@ class DataValueDecorator extends ABarChartDecorator
      */
     _AddLabels()
     {
+        // TODO: add background region code (see icon labels).
         var helper = new Konva.Group();
         var groups = this.GetGroups();
         var offsetHelper = this._CreateOffsetHelper(groups);
@@ -123,38 +128,46 @@ class DataValueDecorator extends ABarChartDecorator
     _AddIconLabels()
     {
         var helper = new Konva.Group();
-        var groups = this.GetGroups();
-        var offsetHelper = this._CreateOffsetHelper(groups);
-        var labelHeight = this._GetFontSize('M', this._font);
-
         var minCategory = this._FindMinCategory();
-
         this._data.forEach((d,i) => {
             var label = d.value;
 
             if (this._isPercentage) label += '%';
             if (this._isCategory) label += ' ' + d.category;
 
-            var labelWidth = this._GetFontSize(label, this._font),
+            var labelWidth = this._GetTextWidth(label, this._font),
+                labelHeight = this._GetTextHeight(label, this._font),
                 offset = (i == 0) ? 0 : this._padding,
                 iconWidth = this._GetIconWidth(this._icon, this._iconSize),
                 iconHeight = this._GetIconHeight(this._icon, this._iconSize),
                 xIcon = (this._xScale(d.category) - this._xScale(minCategory) + offset),
-                xMiddle = xIcon,
-                x = xMiddle - labelWidth / 2,
-                y = 2.1 * iconHeight / 2;
+                xMiddle = xIcon + (iconWidth / 2),
+                x = xMiddle - (labelWidth / 2),
+                y = 2.5 * iconHeight / 2;
 
             var text = new Konva.Text({
                 x: x,
-                y: y,
+                y: y - 1,
                 text: label,
                 fontSize: this._font.fontSize,
                 fontFamily: this._font.fontFamily,
                 fill: this._font.fontColor,
             }); 
-
+            helper.add(this._CreateBackgroundRegion(x, y, labelWidth, labelHeight));
             helper.add(text);
         });
         this._group.add(helper);
+    }
+
+    _CreateBackgroundRegion(x, y, width, height)
+    {
+        return new Konva.Rect({
+            x: x - 5,
+            y: y - 5,
+            width: width + 10,
+            height: height + 10,
+            fill: this._backgroundFill,
+            stroke: this._backgroundStroke,
+        });
     }
 }
