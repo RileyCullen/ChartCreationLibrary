@@ -1,12 +1,30 @@
+// Riley Cullen
+// IconBarChart.js
+// Lasted Updated: May 31, 2021
+
 class IconBarChart extends ABarChart
 {
     /**
-     * Implementation notes:
+     * @summary     A concrete bar chart type that creates a "bar" chart with
+     *              icons in place of the bars.
+     * @description A concrete bar chart type that uses icons from FontAwesome
+     *              and the Konva.Text module to create icon bar charts. 
+     *              Essentially, the icons are created using Konva.Text elements
+     *              and a linear gradient is applied too the text element to 
+     *              simulate the "bar" in a bar chart.
      * 
-     * 1. Width between elements should remain same (i.e. rotation shouldn't 
-     *    impact padding).
-     * 2. range -> (0 to h)
-     * 3. xScale(dataPoint) / h -> linearGradient
+     * @see ABarChart for documentation on data, group, width, height, and padding.
+     * @param {string} icon           The icon that will be displayed on the chart.
+     * @param {string} remainderColor The color of the remaining space in the 
+     *                                icon. For example, if half an icon is 
+     *                                to be colored blue and remainderColor is 
+     *                                set to 'white', then the remaining half
+     *                                will be colored white.
+     * @param {double} iconSize       The size of the icon.
+     * @param {bool}   dynamicFont    A boolean that determines if the icons 
+     *                                will be dynamically resized based on 
+     *                                the given chart width.
+     *  
      */
     constructor({data, group, width, height, padding, angleOffset = 0,
         icon = '\uf183', remainderColor = 'black', iconSize = 100, dynamicFont = false})
@@ -19,6 +37,12 @@ class IconBarChart extends ABarChart
         this._dynamicFont = dynamicFont;
     }
 
+    /**
+     * @summary     A method that draws the icon bar chart on canvas.
+     * @description A method that creates the icon bar chart by first binding 
+     *              the data within _data to custom DOM elements and the using 
+     *              that data to draw canvas elements using Konva.js
+     */
     CreateBarChart()
     {
         if (this._dynamicFont) this._DetermineFontSize();
@@ -33,67 +57,46 @@ class IconBarChart extends ABarChart
         this._Draw(custom, points);
     }
 
+    /**
+     * @summary     This function finds the max height, or upper bound, of the
+     *              icon.
+     * @description This returns the max height of the icon to the caller. An
+     *              upper bound is necessary because it allows us to set an accurate
+     *              start point for our linear gradient.
+     * @returns An integer representing the upperBound of our icon.
+     */
     _UpdateUpperBound()
     {
         var upperBound = this._iconSize;
-        if (this._angleOffset == 45) {
-            upperBound = Math.sqrt(2 * Math.pow(this._iconSize, 2));
-        } 
         return parseInt(upperBound);
     }
 
+    /**
+     * @summary     Returns an array of points for the linear gradient.
+     * @description Creates an array of JSON objects that represent the start
+     *              and end points of the linear gradient we will use to simulate 
+     *              the bars in a bar chart. 
+     * 
+     * @param {double} upperBound The height of the icon.
+     * @returns An array of JSON objects representing the start and end points of
+     *          a linear gradient.
+     */
     _DetermineLinearGradient(upperBound)
     {
-        if (this._angleOffset === 45) {
-            /*
-                y: upperBound -> width of bounding box
-                x: upperBound -> height of bounding box
-            */
-            var multiplier = 0.6;
-            return [
-                { x: 0, y: upperBound * multiplier},
-                { x: upperBound * multiplier, y: 0 }
-            ];
-        }
-
+        // Note that we add one to the start and end points as "padding." Without 
+        // it, some icons will have extra white space surrounding the actual linear 
+        // gradient.
         return [
             { x: 0, y: upperBound + 1},
             { x: 0, y: -1 }
         ];
     }
 
-    _GetIconWidth()
-    {
-        var canvas = document.createElement('canvas');
-        var ctx    = canvas.getContext('2d');
-
-        document.getElementById('body').appendChild(canvas)
-
-        ctx.font = '900 ' + this._iconSize + 'px ' + '"Font Awesome 5 Free"';
-        var textMetrics = ctx.measureText(this._icon);
-        var width = Math.abs(textMetrics.actualBoundingBoxLeft 
-            - textMetrics.actualBoundingBoxRight);
-
-        canvas.remove();
-
-        return width;
-    }
-
-    _GetIconHeight()
-    {
-        var canvas = document.createElement('canvas');
-        var ctx    = canvas.getContext('2d');
-
-        ctx.font = '900 ' + this._iconSize + 'px ' + '"Font Awesome 5 Free"';
-        var textMetrics = ctx.measureText(this._icon);
-        var height = Math.abs(textMetrics.actualBoundingBoxAscent) - 
-            Math.abs(textMetrics.actualBoundingBoxDescent);
-        
-        canvas.remove();
-
-        return height;
-    }
-
+    /**
+     * @summary     Finds the max value in _data.
+     * @description Iterates through _data and returns the max value.
+     * @returns     The max value.
+     */
     _FindMaxValue()
     {
         var max = (this._data.length > 0) ? this._data[0].value : 0;
@@ -103,6 +106,13 @@ class IconBarChart extends ABarChart
         return max;
     }
 
+    /**
+     * @summary     Binds data to custom DOM elements using D3.
+     * @description Creates custom DOM elements, accessible through custom,
+     *              and binds data to those elements for use later.
+     * 
+     * @param {DOM Element} custom The container of our custom DOM elements.
+     */
     _BindData(custom)
     {
         var minCategory = this._FindMinCategory();
@@ -112,6 +122,11 @@ class IconBarChart extends ABarChart
             .append('custom')
             .attr('class', 'elem')
             .attr('x', (d, i) => {
+                /**
+                 * NOTE that here, we subtract the xScale of minCategory so that
+                 * the first icon starts at 0. In addition, we add offset to account 
+                 * for the padding set by the user.
+                 */
                 var offset = (i == 0) ? 0 : this._padding;
                 return this._xScale(d.category) - this._xScale(minCategory) + offset;
             })
@@ -123,6 +138,13 @@ class IconBarChart extends ABarChart
                 return this._xScale.bandwidth();
             })
             .attr('gradientHeight', (d) => {
+                /**
+                 * This value will determine the height of the gradient. Essentially,
+                 * we find the max value in _data and then use the proportion of 
+                 * the current value out of this max value to find the point at which
+                 * the gradient changes from its intended color to the remainder
+                 * color. This value needs to be between 0 and 1.
+                 */
                 return d.value / this._FindMaxValue();
             })
             .attr('fillStyle', (d) => {
@@ -134,6 +156,12 @@ class IconBarChart extends ABarChart
             .attr('angleOffset', this._angleOffset);
     }
 
+    /**
+     * @summary     Finds the category with the smallest value in _data.
+     * @description Iterates through _data and returns the category name corresponding
+     *              to the smallest value.
+     * @returns     A string representing the category with the smallest value.
+     */
     _FindMinCategory()
     {
         var index = 0;
@@ -143,6 +171,13 @@ class IconBarChart extends ABarChart
         return this._data[index].category;
     }
 
+    /**
+     * @summary     Draws bar chart on canvas.
+     * @description Uses data bound in custom to draw icons to canvas using Konva.JS.
+     * 
+     * @param {DOM Element} custom The container for our custom DOM elements.
+     * @param {JSON Array}  points The start and end points for our linear gradient.
+     */
     _Draw(custom, points)
     {
         var elements = custom.selectAll('custom.elem');

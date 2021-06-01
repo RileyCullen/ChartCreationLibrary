@@ -23,6 +23,16 @@ class DataValueDecorator extends ABarChartDecorator
      *                                  in the middle of the bars. If false, the 
      *                                  values will be located at the top of the bars.
      * @param {JSON array} font         Determines font of labels
+     * @param {string}     icon         The icon we passed to IconBarChart. Note
+     *                                  that this parameter is only necessary 
+     *                                  when using CategoryLabel with IconBarChart.
+     * @param {double}     iconSize     The size of the icon. Again, this is only
+     *                                  necessary when using CategoryLabel with
+     *                                  IconBarChart.
+     * @param {string} backgroundStroke The stroke color for the background region
+     *                                  created around the data value.
+     * @param {string} backgroundFill   The fill color for the background region
+     *                                  created around the data value.
      */
     constructor({
         chart, 
@@ -125,6 +135,11 @@ class DataValueDecorator extends ABarChartDecorator
         helper.rotate(this._rotateBy);
     }
 
+    /**
+     * @summary     Creates the data value labels for the IconBar type.
+     * @description A function that iterates through all of the data in _data 
+     *              and creates a label for each value. 
+     */
     _AddIconLabels()
     {
         var helper = new Konva.Group();
@@ -135,6 +150,10 @@ class DataValueDecorator extends ABarChartDecorator
             if (this._isPercentage) label += '%';
             if (this._isCategory) label += ' ' + d.category;
 
+            /**
+             * Setting up initial values. See CategoryLabelDecorator for description
+             * on what xIcon, xMiddle, and x represent.
+             */
             var labelWidth = this._GetTextWidth(label, this._font),
                 labelHeight = this._GetTextHeight(label, this._font),
                 offset = (i == 0) ? 0 : this._padding,
@@ -159,6 +178,17 @@ class DataValueDecorator extends ABarChartDecorator
         this._group.add(helper);
     }
 
+    /**
+     * @summary     Creates a background region for the a data value label.
+     * 
+     * @param {double} x      Starting x position for background region.
+     * @param {double} y      Starting y position for background region.
+     * @param {double} width  Width of background region.
+     * @param {double} height Height of background region.
+     * 
+     * @returns A Konva.Rect object representing the newly created background 
+     *          region.
+     */
     _CreateBackgroundRegion(x, y, width, height)
     {
         return new Konva.Rect({

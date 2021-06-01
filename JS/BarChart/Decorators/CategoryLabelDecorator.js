@@ -30,6 +30,12 @@ class CategoryLabelDecorator extends ABarChartDecorator
      *                                      'fontFamily': (string),
      *                                      'textColor': (string),
      *                                  }
+     * @param {string}     icon         The icon we passed to IconBarChart. Note
+     *                                  that this parameter is only necessary 
+     *                                  when using CategoryLabel with IconBarChart.
+     * @param {double}     iconSize     The size of the icon. Again, this is only
+     *                                  necessary when using CategoryLabel with
+     *                                  IconBarChart.
      */
     constructor({
         chart, 
@@ -121,7 +127,7 @@ class CategoryLabelDecorator extends ABarChartDecorator
     }
 
     /**
-     * @summary     Creates labels for the IconBarChart type/
+     * @summary     Creates labels for the IconBarChart type.
      * @description Dynamically places labels onto an IconBarChart either above
      *              or below the icon chart.
      */
@@ -134,7 +140,16 @@ class CategoryLabelDecorator extends ABarChartDecorator
 
         for (var i = iter.next().value; i != null; i = iter.next().value) {
 
-            // Setting up initial values
+            /**
+             * Setting up the position of the category labels.
+             * 
+             * Note that:
+             *  1. xIcon represents the starting x position for the icon
+             *  2. xMiddle represents the middle of the icon
+             *  3. x is the final position of the category label.
+             *  4. For some reason, we have to multiple the icon height by 2.1.
+             *     Not sure why, but it holds for all icons.
+             */
             var offset = (counter === 0) ? 0 : this._padding;
             var width = this._GetFontSize(i, this._font);
             var iconWidth = this._GetIconWidth(this._icon, this._iconSize);
