@@ -324,7 +324,6 @@ class DiabetesTemplateOne extends AInfographic
             width: 200,
             height: 300,
             padding: 50,
-            angleOffset: 0,
             icon: icon,
             remainderColor: 'white',
             iconSize: iconSize,
