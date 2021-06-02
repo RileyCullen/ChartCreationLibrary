@@ -14,6 +14,7 @@ class AInfographic
      * 
      * @source _AddTextSelection() uses code from https://konvajs.org/docs/sandbox/Editable_Text.html
      * @source Selecting mutliple elements demo uses code from https://konvajs.org/docs/select_and_transform/Basic_demo.html#page-title
+     * @source _DrawSVG code taken from https://konvajs.org/docs/sandbox/SVG_On_Canvas.html
      * 
      * @param {double} height The height of the canvas element
      * @param {double} width  The width of the canvas element
@@ -74,6 +75,33 @@ class AInfographic
     Remove()
     {
         if (this._UIAdder.GetState()) this._UIAdder.RemoveCurrentEditor();
+    }
+
+    /**
+     * @summary     Draws SVG on the canvas.
+     * @description A function that uses native canvas to draw an SVG and then
+     *              add it using a Konva.JS image object. NOTE that canvas does
+     *              not support displaying SVGs so this is the only work around 
+     *              (not including using external libraries).
+     * 
+     * @param {string}      source The SVG we want to draw on the canvas.
+     * @param {Konva.Layer} layer  The layer we want to add the SVG to.
+     * @param {double}      width  Desired width of the SVG image.
+     * @param {double}      height Desired height of the SVG image.
+     */
+    _DrawSVG({
+        source, layer, width, height, x, y,
+    })
+    {
+        Konva.Image.fromURL(source, (imageNode) => {
+            layer.add(imageNode);
+            imageNode.setAttrs({
+                x: x,
+                y: y,
+                width: width,
+                height: height,
+            });
+        });
     }
 
     /**
