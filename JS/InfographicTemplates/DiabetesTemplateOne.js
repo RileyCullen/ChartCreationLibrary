@@ -396,6 +396,89 @@ class DiabetesTemplateOne extends AInfographic
             lineHeight: 1.5,
             align: 'center', 
         });
+
+        // Adding states
+        var startingX = 55;
+
+        var oneDiv = document.createElement('div');
+        oneDiv.style.color = 'white';
+        var oneText = '<p style="margin: 0px; text-align: center;"><span style="font-family: Open Sans, sans-serif; font-size: 22px; line-height: 1.5">1.</span></p>'
+        oneDiv.innerHTML = oneText;
+        this._textHandler.AddTextElem(oneDiv, sectionThree, 25, 15, 0);
+        this._textHandler.SetCSSInfo(this._textHandler.GetCurrID(), {
+            fontFamily: openSans,
+            fontSize:  22 + 'px',
+            textColor: 'white',
+            lineHeight: 1.5,
+            align: 'center', 
+        });
+
+        var statisticDiv = document.createElement('div');
+        statisticDiv.style.color = 'white';
+        var statisticText = '<p style="margin: 0px; text-align: center;"><span style="font-family: Open Sans, sans-serif; font-size: 18px; line-height: 1.5">$27.6 Billion</span></p>'
+        statisticDiv.innerHTML = statisticText;
+        this._textHandler.AddTextElem(statisticDiv, sectionThree, 70, 140, 0);
+        this._textHandler.SetCSSInfo(this._textHandler.GetCurrID(), {
+            fontFamily: openSans,
+            fontSize:  18 + 'px',
+            textColor: 'white',
+            lineHeight: 1.5,
+            align: 'center', 
+        });
+
+        this._DrawSVG({
+            source: 'Media/States/california.svg',
+            layer: sectionThree,
+            width: 100,
+            height: 120,
+            x: startingX,
+            y: 15,
+        });
+
+        var twoDiv = document.createElement('div');
+        twoDiv.style.color = 'white';
+        var twoText = '<p style="margin: 0px; text-align: center;"><span style="font-family: Open Sans, sans-serif; font-size: 22px; line-height: 1.5">2.</span></p>'
+        twoDiv.innerHTML = twoText;
+        this._textHandler.AddTextElem(twoDiv, sectionThree, startingX + 125, 15, 0);
+        this._textHandler.SetCSSInfo(this._textHandler.GetCurrID(), {
+            fontFamily: openSans,
+            fontSize:  22 + 'px',
+            textColor: 'white',
+            lineHeight: 1.5,
+            align: 'center', 
+        });
+
+        this._DrawSVG({
+            source: 'Media/States/florida.svg',
+            layer: sectionThree,
+            width: 140,
+            height: 140,
+            x: startingX + 150,
+            y: 15, 
+        })
+
+        var threeDiv = document.createElement('div');
+        threeDiv.style.color = 'white';
+        var threeText = '<p style="margin: 0px; text-align: center;"><span style="font-family: Open Sans, sans-serif; font-size: 22px; line-height: 1.5">3.</span></p>'
+        threeDiv.innerHTML = threeText;
+        this._textHandler.AddTextElem(threeDiv, sectionThree, startingX + 335, 15, 0);
+        this._textHandler.SetCSSInfo(this._textHandler.GetCurrID(), {
+            fontFamily: openSans,
+            fontSize:  22 + 'px',
+            textColor: 'white',
+            lineHeight: 1.5,
+            align: 'center', 
+        });
+
+
+        this._DrawSVG({
+            source: 'Media/States/texas.svg',
+            layer: sectionThree,
+            width: 140,
+            height: 140,
+            x: startingX + 340,
+            y: 15, 
+        })
     }
 
     _CreateBackgroundRect({width, height, group})
